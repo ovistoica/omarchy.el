@@ -53,26 +53,28 @@ Set this to a theme that is guaranteed to be loadable in your config."
   :type 'string)
 
 (defcustom omarchy-theme-map
-  '(("Catppuccin"       . (lambda () (setq catppuccin-flavor 'mocha)
-                            (omarchy--raw-load-theme 'catppuccin)))
-    ("Catppuccin Latte" . (lambda () (setq catppuccin-flavor 'latte)
-                            (omarchy--raw-load-theme 'catppuccin)))
+  '(("Catppuccin"       . catppuccin-mocha)
+    ("Catppuccin Latte" . catppuccin-latte)
+    ("Ethereal"         . ethereal)
     ("Everforest"       . everforest)
     ("Flexoki Light"    . flexoki-light)
-    ("Gruvbox"          . doom-gruvbox)
+    ("Gruvbox"          . gruvbox)
     ("Kanagawa"         . kanagawa)
     ("Matte Black"      . matte-black)
-    ("Nord"             . doom-nord)
+    ("Nord"             . nord)
     ("Osaka Jade"       . osaka-jade)
-    ("Ristretto"        . doom-monokai-ristretto)
+    ("Ristretto"        . ristretto)
     ("Rose Pine"        . rose-pine)
-    ("Tokyo Night"      . doom-tokyo-night)
-    ("Ethereal"         . modus-vivendi-tinted))
+    ("Tokyo Night"      . tokyo-night))
   "Map an Omarchy theme name to an Emacs theme symbol or a thunk.
 Keys are the exact display names reported by `omarchy-theme-list'.
 Values are either a theme symbol loaded via `load-theme', or a thunk
 called for its side effects (useful when a theme needs setup such as
-a flavor variable before loading)."
+a flavor variable before loading).
+
+All bundled themes in the default value are provided by this package
+and derived from Modus via `modus-themes-theme', so they ship with
+full Magit/Org/Eglot/tree-sitter coverage out of the box."
   :type '(alist :key-type string :value-type sexp))
 
 ;;; Predicates
