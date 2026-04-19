@@ -66,8 +66,14 @@ All bundled themes use the public `modus-themes-theme` machinery, so you get ful
 ### Prerequisites
 
 - Emacs 29.1 or newer
+- **Emacs server running** — required for the desktop → Emacs sync. The shell hooks call back via `emacsclient`, so a live server is what actually receives the theme/font change. Either run Emacs as a daemon (`emacs --daemon` or `systemctl --user start emacs.service`) or start the server from your init:
+  ```elisp
+  (require 'server)
+  (unless (server-running-p) (server-start))
+  ```
+  `M-x omarchy-install-hooks` will emit a warning if the server isn't running when you try to install the hooks.
 - [`modus-themes`](https://protesilaos.com/emacs/modus-themes) 4.4 or newer (for the bundled themes only — `omarchy.el` itself has no runtime dependencies)
-- Omarchy on the host system, if you want the desktop sync (otherwise it's just a theme pack + small convenience library)
+- Omarchy on the host system, if you want the desktop sync (otherwise it's just a theme pack + small convenience library; no server needed in that case)
 
 ### MELPA
 
@@ -76,6 +82,12 @@ Coming soon.
 ### Straight / use-package
 
 ```elisp
+;; Ensure the Emacs server is running — the shell hooks use emacsclient.
+;; Skip this block if you run Emacs as a daemon.
+(use-package server
+  :config
+  (unless (server-running-p) (server-start)))
+
 (use-package omarchy
   :vc (:url "https://github.com/ovistoica/omarchy.el" :rev :newest)
   :demand t
@@ -101,16 +113,23 @@ Clone the repo somewhere, add it to `load-path`, and you're done:
 
 ## Getting started
 
-Four lines gets you the whole experience:
+Get the whole experience in a handful of lines:
 
 ```elisp
+;; 1. Make sure the server is running so emacsclient can reach us.
+(require 'server)
+(unless (server-running-p) (server-start))
+
+;; 2. Load the package + bundled themes.
 (require 'omarchy)
 (require 'omarchy-themes)                     ; register bundled themes
+
+;; 3. Sync with Omarchy (no-op on non-Omarchy systems, applies fallback).
 (setq omarchy-default-theme 'modus-operandi)  ; non-Omarchy fallback
 (omarchy-init)                                ; sync theme + font now
 ```
 
-`omarchy-themes` is only needed if you want the bundled themes on `custom-theme-load-path` — the core `omarchy` package itself has no theme dependencies.
+`omarchy-themes` is only needed if you want the bundled themes on `custom-theme-load-path` — the core `omarchy` package itself has no theme dependencies. The `server-start` block isn't needed if you already run Emacs as a daemon (`emacs --daemon`, or a `systemd --user` unit) — the daemon starts its own server.
 
 On an Omarchy system `omarchy-init` will:
 
@@ -337,6 +356,8 @@ Two subtleties that matter:
 **I'm not on Omarchy — is this still useful?** The themes are standalone and usable on any Emacs. The core package degrades to a no-op on non-Omarchy systems, so it's safe to leave in your config if you occasionally boot between distros. Interactive commands will just message "Omarchy not available".
 
 **Why derive from Modus instead of hand-rolling faces?** `modus-themes-theme` expands into a `custom-theme-set-faces` block generated from Modus's comprehensive ~400-face catalog against your palette. You get Magit, Org, Eglot, tree-sitter, Corfu, Vertico, and dozens of other packages styled coherently for free — and future Modus updates bring new package coverage without any work on your end. See the Modus Info node *Build on top of the Modus themes* for the pattern.
+
+**I changed the theme in Omarchy but Emacs didn't repaint.** The shell hooks forward changes to Emacs via `emacsclient`, which needs a running Emacs server. Either start Emacs as a daemon (`emacs --daemon`) or add `(require 'server) (unless (server-running-p) (server-start))` to your init. The hook scripts `pgrep -x emacs` before calling `emacsclient`, so no server means silently skipped updates — nothing in your message log. `M-x omarchy-install-hooks` warns at install time if the server isn't up.
 
 **I set `<theme>-palette-overrides` but nothing changed.** Palette overrides are baked into face specs when the theme loads. Reload the theme after changing them: `M-x load-theme RET <theme> RET` (or just toggle away and back via `omarchy-theme-pick`). Same applies to `modus-themes-italic-constructs` and `modus-themes-bold-constructs`.
 

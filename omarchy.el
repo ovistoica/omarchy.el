@@ -302,8 +302,23 @@ Writes two executable files in `omarchy-hooks-directory':
   theme-set   calls `omarchy-apply-theme' with the new theme name.
   font-set    calls `omarchy-apply-font'  with the new font name.
 
-Overwrites existing files.  Returns the list of paths written."
+Overwrites existing files.  Returns the list of paths written.
+
+Emits a warning if the Emacs server is not running — the scripts depend
+on `emacsclient' reaching a live server.  Start one with \\[server-start]
+or add the usual `(require \\='server) (unless (server-running-p) (server-start))'
+block to your init."
   (interactive)
+  ;; `server-process' (not `server-running-p') tells us whether *this*
+  ;; Emacs is serving.  `server-running-p' can be t for a server owned
+  ;; by some other Emacs process — which would not receive our hooks.
+  (unless (bound-and-true-p server-process)
+    (display-warning
+     'omarchy
+     "Emacs server is not running — the installed hooks need emacsclient.
+Add (require 'server) (unless (server-running-p) (server-start)) to your
+init, or run Emacs as a daemon (emacs --daemon)."
+     :warning))
   (let ((theme-hook (omarchy--write-hook
                      "theme-set"
                      "Omarchy theme-set hook for Emacs integration"
