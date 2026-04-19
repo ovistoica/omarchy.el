@@ -6,9 +6,9 @@ On non-Omarchy systems the package loads cleanly and degrades gracefully — int
 
 ## Demo
 
-https://github.com/ovistoica/omarchy.el/raw/main/resources/demo.mp4
+![omarchy.el demo](resources/demo.gif)
 
-(If the video doesn't play inline, [download / open it here](resources/demo.mp4).)
+Higher-quality MP4: [resources/demo.mp4](resources/demo.mp4) (also auto-plays inline on GitHub web if your connection allows).
 
 ## Table of contents
 
