@@ -16,6 +16,7 @@ On non-Omarchy systems the package loads cleanly and degrades gracefully — int
 - [How the sync works](#how-the-sync-works)
 - [FAQ](#faq)
 - [Status](#status)
+- [Contributing](#contributing)
 
 ## What's in the box
 
@@ -373,7 +374,39 @@ Alpha. Interfaces may change before 0.1 is released. In particular:
 - All 13 Omarchy theme names mapped by default are bundled. New additions would need a matching Omarchy theme (e.g. `hackerman`, `lumon`, `retro-82`, `vantablack`, `white`, `miasma` are not yet bundled; the core package still handles them via `omarchy-theme-map` if you wire up a third-party Emacs theme).
 - Battery / power / brightness toggles are planned.
 
-Bug reports, palette nits, and theme submissions welcome.
+## Contributing
+
+Bug reports, palette nits, and theme submissions all welcome — open an issue or send a PR.
+
+### Palette nits are especially wanted
+
+Getting Emacs to render *identically* to the upstream Neovim theme is hard. Both editors have wildly different face-inheritance graphs, tree-sitter capture sets, and semantic-highlight coverage, and upstream Neovim plugins often have custom behavior for tokens Emacs doesn't surface the same way. A color that looks correct on Go may look wrong on Clojure; a comment hue that's fine in a light theme may be washed out at the same hex in a dark one.
+
+If you spot a token that looks off compared to Neovim, please open an issue. The ideal bug report includes:
+
+1. **Side-by-side screenshot** — same file in Neovim (with the matching Omarchy theme) and Emacs (with this package's theme). Even a small snippet is useful.
+2. **Language and token** — "the function-call color in Rust" / "the `@property` color in TypeScript" / "the docstring color in Clojure". Be specific about *what* face is wrong, not just "it looks different".
+3. **Current hex vs expected hex** — if you know the upstream Neovim plugin's palette slot, name it. If you don't, just paste Emacs's current value (`M-x describe-face RET font-lock-...`) and what Neovim shows.
+4. **Proposed mapping change** — optional but appreciated. Every theme's syntax mapping lives in the `*-palette-mappings-partial` defconst, and changes are usually a one-line edit like `(property cat-lavender)` → `(property cat-blue)`.
+
+### Adding a new theme
+
+Highest-priority additions are the Omarchy-shipped themes not yet bundled: `hackerman`, `lumon`, `retro-82`, `vantablack`, `white`, `miasma`. Porting one means `omarchy-theme-map` covers Omarchy 100% out of the box. Community themes from [omarchythemes.com](https://omarchythemes.com/) are also in scope — if the bundled-theme count keeps growing, we'll likely extract `themes/` into its own repo.
+
+The recipe:
+
+1. Copy an existing theme in `themes/` as a template (`themes/catppuccin-mocha-theme.el` is the canonical pattern).
+2. Translate the Neovim plugin's palette file into the core surfaces + named accent slots + Modus primary color aliases.
+3. Translate the plugin's highlight groups into the `*-palette-mappings-partial` defconst. Key slots: `keyword`, `builtin`, `constant`, `fnname`, `fnname-call`, `type`, `variable`, `variable-use`, `identifier`, `property`, `string`, `docstring`, `comment`, `preprocessor`, `operator`, `punctuation`.
+4. Add the theme symbol to `omarchy-theme-map` in `omarchy.el`.
+5. Verify with `emacs -Q -L . --eval "(require 'omarchy-themes)" --eval "(load-theme 'your-theme :no-confirm)"`.
+6. Open a PR with a side-by-side screenshot against Neovim.
+
+Draft PRs for early palette feedback are fine.
+
+### Code / package changes
+
+For bug fixes to `omarchy.el` itself (CLI integration, hooks, toggles, `omarchy-init`), normal PR conventions apply. Please include a test case or reproduction steps in the commit message.
 
 ## License
 
