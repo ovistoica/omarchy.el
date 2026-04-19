@@ -213,11 +213,10 @@ Same format as `modus-themes-common-palette-overrides'."
   :type '(repeat (list symbol (choice symbol string)))
   :group 'omarchy-themes)
 
-;; Extra faces: Rose Pine italicizes comments/docstrings but NOT
-;; variables.  Modus's `modus-themes-italic-constructs' makes
-;; `modus-themes-slant' italic, which then inherits into both via
-;; `help-argument-name' / `font-lock-variable-*'.  We override just the
-;; variable faces back to upright.  Org heading scaling is Emacs-only.
+;; Keep variable faces upright even when the user enables
+;; `modus-themes-italic-constructs' — Modus makes `modus-themes-slant'
+;; italic, which otherwise bleeds into `font-lock-variable-name-face'
+;; and `help-argument-name' via inheritance.
 (defvar rose-pine-custom-faces
   '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
     `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))

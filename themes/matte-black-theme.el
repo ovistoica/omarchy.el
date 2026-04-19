@@ -211,9 +211,7 @@
 (defvar matte-black-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'matte-black
    'omarchy-themes
    "Matte Black, derived from Modus Vivendi."
@@ -222,7 +220,7 @@
    'matte-black-palette
    'matte-black-palette-overrides
    'matte-black-custom-faces
-   'matte-black-custom-variables))
+   'matte-black-custom-variables)
 
 (provide 'matte-black-theme)
 ;;; matte-black-theme.el ends here

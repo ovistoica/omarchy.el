@@ -215,9 +215,7 @@
 (defvar tokyo-night-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'tokyo-night
    'omarchy-themes
    "Tokyo Night, derived from Modus Vivendi."
@@ -226,7 +224,7 @@
    'tokyo-night-palette
    'tokyo-night-palette-overrides
    'tokyo-night-custom-faces
-   'tokyo-night-custom-variables))
+   'tokyo-night-custom-variables)
 
 (provide 'tokyo-night-theme)
 ;;; tokyo-night-theme.el ends here

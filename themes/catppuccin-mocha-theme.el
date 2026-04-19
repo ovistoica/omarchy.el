@@ -233,9 +233,7 @@ Mirrors the catppuccin/nvim syntax group specification.")
 (defvar catppuccin-mocha-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'catppuccin-mocha
    'omarchy-themes
    "Catppuccin Mocha, derived from Modus Vivendi."
@@ -244,7 +242,7 @@ Mirrors the catppuccin/nvim syntax group specification.")
    'catppuccin-mocha-palette
    'catppuccin-mocha-palette-overrides
    'catppuccin-mocha-custom-faces
-   'catppuccin-mocha-custom-variables))
+   'catppuccin-mocha-custom-variables)
 
 (provide 'catppuccin-mocha-theme)
 ;;; catppuccin-mocha-theme.el ends here

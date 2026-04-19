@@ -224,11 +224,10 @@ Same format as `modus-themes-common-palette-overrides'."
   :type '(repeat (list symbol (choice symbol string)))
   :group 'omarchy-themes)
 
-;; Extra faces: Flexoki italicizes only comments/docstrings (not
-;; variables).  Modus's `modus-themes-italic-constructs' makes
-;; `modus-themes-slant' italic, which then inherits into variable
-;; faces via `help-argument-name' / `font-lock-variable-*'.  Override
-;; just the variable faces back to upright.
+;; Keep variable faces upright even when the user enables
+;; `modus-themes-italic-constructs' — Modus makes `modus-themes-slant'
+;; italic, which otherwise bleeds into `font-lock-variable-name-face'
+;; and `help-argument-name' via inheritance.
 (defvar flexoki-light-custom-faces
   '(`(font-lock-variable-name-face ((,c :foreground ,flex-blue :slant normal)))
     `(font-lock-variable-use-face  ((,c :foreground ,flex-blue :slant normal)))

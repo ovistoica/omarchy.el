@@ -207,9 +207,7 @@
 (defvar ristretto-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'ristretto
    'omarchy-themes
    "Monokai Pro Ristretto, derived from Modus Vivendi."
@@ -218,7 +216,7 @@
    'ristretto-palette
    'ristretto-palette-overrides
    'ristretto-custom-faces
-   'ristretto-custom-variables))
+   'ristretto-custom-variables)
 
 (provide 'ristretto-theme)
 ;;; ristretto-theme.el ends here

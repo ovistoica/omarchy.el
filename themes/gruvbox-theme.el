@@ -208,9 +208,7 @@
 (defvar gruvbox-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'gruvbox
    'omarchy-themes
    "Gruvbox dark (medium contrast), derived from Modus Vivendi."
@@ -219,7 +217,7 @@
    'gruvbox-palette
    'gruvbox-palette-overrides
    'gruvbox-custom-faces
-   'gruvbox-custom-variables))
+   'gruvbox-custom-variables)
 
 (provide 'gruvbox-theme)
 ;;; gruvbox-theme.el ends here

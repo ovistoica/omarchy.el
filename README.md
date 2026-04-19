@@ -166,20 +166,20 @@ For each theme below, the syntax slot mapping (keyword, function, variable, stri
 | Osaka Jade | `osaka-jade` | `ribru17/bamboo.nvim` *vulgaris* | keyword purple · function blue · string green · variable fg-plain |
 | Catppuccin Mocha | `catppuccin-mocha` | `catppuccin/nvim` | keyword mauve · function blue · string green · variable flamingo |
 | Tokyo Night | `tokyo-night` | `doom-tokyo-night` alignment (night palette) | keyword magenta · function blue · string green · variable base8 |
-| Gruvbox | `gruvbox` | `ellisonleao/gruvbox.nvim` | keyword red · function green+bold · string green · variable blue |
+| Gruvbox | `gruvbox` | `ellisonleao/gruvbox.nvim` | keyword red · function green · string green · variable blue |
 | Kanagawa Wave | `kanagawa` | `rebelot/kanagawa.nvim` | keyword oniViolet · function crystalBlue · string springGreen · variable fujiWhite |
 | Everforest | `everforest` | `theorytoe/everforest-emacs` (medium dark) | keyword red · function green · string green · variable blue |
 | Nord | `nord` | `doom-nord` alignment | keyword blue · function cyan · string green · variable base7 |
 | Ristretto | `ristretto` | `gthelding/monokai-pro.nvim` ristretto filter | keyword red italic · function green · string yellow · variable white |
 | Matte Black | `matte-black` | `tahayvr/matteblack.nvim` | keyword green · function crimson · string fg-neutral · variable amber |
-| Ethereal | `ethereal` | `bjarneo/ethereal.nvim` | keyword purple-bold · function magenta2 · string green · variable magenta2 |
+| Ethereal | `ethereal` | `bjarneo/ethereal.nvim` | keyword purple · function magenta2 · string green · variable magenta2 |
 
-Every theme follows the same defaults, all of which can be turned off or retargeted — see [Customizing a theme](#customizing-a-theme) below:
+Out of the box the themes follow Modus's own conservative defaults: no italic, no bold weight on syntax faces. That's a deliberate choice — readability first, Modus's research on legibility second. You can enable italics and/or bold globally via standard Modus variables; see [Customizing a theme](#customizing-a-theme) below.
 
-- **Comments are italic**, everything else upright. Toggle with `modus-themes-italic-constructs` and reload the theme.
-- **Variables are not italic** even when the upstream Neovim highlight group implies it, because in Emacs that bleeds through `help-argument-name` / function parameters / magit into places where it hurts readability. Override `font-lock-variable-name-face` if you'd like it back.
-- **Bold is opt-in and reserved** for what upstream actually bolds (Gruvbox functions, Ethereal's keyword/function/type). Toggle globally with `modus-themes-bold-constructs`.
-- `bg-region` / `bg-hl-line` / `bg-paren-match` are tuned to match the upstream plugin's visual selection and cursor line, not Modus's defaults — override via the theme's `*-palette-overrides` defcustom.
+A few things the themes do handle for you:
+
+- **Variables stay upright** even when you enable italic constructs, because in Emacs `modus-themes-italic-constructs` also italicizes `help-argument-name`, function parameters in magit, and other places where that bleed hurts readability. Each theme overrides `font-lock-variable-name-face` / `font-lock-variable-use-face` / `help-argument-name` back to `:slant normal`.
+- `bg-region` / `bg-hl-line` / `bg-paren-match` are tuned to match the upstream plugin's visual selection and cursor line, not Modus's defaults — override via the theme's `*-palette-overrides` defcustom if you prefer Modus-standard shades.
 
 ### Customizing a theme
 
@@ -195,14 +195,19 @@ All 13 bundled themes register their `<theme>-palette-overrides` defcustoms unde
         (bg-region "#e4d7c7")))   ; warmer selection
 ```
 
-**Italics and bold** — the bundled themes pre-set these to match upstream (e.g. italic comments for every theme, bold functions for Gruvbox, bold keyword/function/type for Ethereal). You can override globally with Modus's own variables:
+**Italics and bold for syntax** — these are off by default (plain Modus behavior). Enable them via Modus's two globals and then reload the theme:
 
 ```elisp
-(setq modus-themes-italic-constructs nil   ; turn italics off globally
-      modus-themes-bold-constructs   t)    ; turn bold on globally
+(setq modus-themes-italic-constructs t    ; italic comments, docstrings, etc.
+      modus-themes-bold-constructs   t)   ; bold keywords, builtins, etc.
+
+;; Reload the currently-active theme so Modus regenerates faces
+;; with the new values (they're read at face-generation time).
+(mapc #'disable-theme custom-enabled-themes)
+(load-theme 'catppuccin-mocha :no-confirm)
 ```
 
-After changing these, reload the theme (`M-x load-theme RET <theme> RET`) so Modus regenerates its faces with the new settings — they're read at face-generation time, not at face-application time.
+Exactly *which* faces get italic/bold is controlled by Modus itself — see Info node `(modus-themes) Italic constructs` and `(modus-themes) Bold constructs` for the full scope. The bundled themes inherit that behavior; they don't override it.
 
 **Font weight/slant of individual faces** — use standard `custom-set-faces` or `face-remap`. Common ones:
 

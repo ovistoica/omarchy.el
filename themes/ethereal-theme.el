@@ -207,9 +207,7 @@
 (defvar ethereal-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs t))  ; Ethereal uses bold on keyword/fn/type
-  (modus-themes-theme
+(modus-themes-theme
    'ethereal
    'omarchy-themes
    "Ethereal, derived from Modus Vivendi."
@@ -218,7 +216,7 @@
    'ethereal-palette
    'ethereal-palette-overrides
    'ethereal-custom-faces
-   'ethereal-custom-variables))
+   'ethereal-custom-variables)
 
 (provide 'ethereal-theme)
 ;;; ethereal-theme.el ends here

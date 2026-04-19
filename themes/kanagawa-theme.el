@@ -211,9 +211,7 @@
 (defvar kanagawa-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'kanagawa
    'omarchy-themes
    "Kanagawa Wave, derived from Modus Vivendi."
@@ -222,7 +220,7 @@
    'kanagawa-palette
    'kanagawa-palette-overrides
    'kanagawa-custom-faces
-   'kanagawa-custom-variables))
+   'kanagawa-custom-variables)
 
 (provide 'kanagawa-theme)
 ;;; kanagawa-theme.el ends here

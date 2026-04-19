@@ -207,9 +207,7 @@
 (defvar catppuccin-latte-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'catppuccin-latte
    'omarchy-themes
    "Catppuccin Latte, derived from Modus Operandi."
@@ -218,7 +216,7 @@
    'catppuccin-latte-palette
    'catppuccin-latte-palette-overrides
    'catppuccin-latte-custom-faces
-   'catppuccin-latte-custom-variables))
+   'catppuccin-latte-custom-variables)
 
 (provide 'catppuccin-latte-theme)
 ;;; catppuccin-latte-theme.el ends here

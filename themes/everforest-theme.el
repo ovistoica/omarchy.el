@@ -213,9 +213,7 @@
 (defvar everforest-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'everforest
    'omarchy-themes
    "Everforest, derived from Modus Vivendi."
@@ -224,7 +222,7 @@
    'everforest-palette
    'everforest-palette-overrides
    'everforest-custom-faces
-   'everforest-custom-variables))
+   'everforest-custom-variables)
 
 (provide 'everforest-theme)
 ;;; everforest-theme.el ends here

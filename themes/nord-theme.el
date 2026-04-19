@@ -216,9 +216,7 @@
 (defvar nord-custom-variables nil
   "Custom-variable specs layered on top of Modus defaults.")
 
-(let ((modus-themes-italic-constructs t)
-      (modus-themes-bold-constructs nil))
-  (modus-themes-theme
+(modus-themes-theme
    'nord
    'omarchy-themes
    "Nord, derived from Modus Vivendi."
@@ -227,7 +225,7 @@
    'nord-palette
    'nord-palette-overrides
    'nord-custom-faces
-   'nord-custom-variables))
+   'nord-custom-variables)
 
 (provide 'nord-theme)
 ;;; nord-theme.el ends here
