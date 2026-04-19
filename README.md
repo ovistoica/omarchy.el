@@ -1,15 +1,8 @@
 # omarchy.el
 
-Emacs integration for [Omarchy](https://omarchy.org), the opinionated
-Arch + Hyprland Linux distribution by DHH. Keeps your Emacs theme and
-default font in lockstep with the rest of the desktop, ships three
-Modus-derived themes faithful to their Neovim counterparts, and wraps
-the common `omarchy-*` CLI toggles so you don't have to context-switch
-to a terminal.
+Emacs integration for [Omarchy](https://omarchy.org), the opinionated Arch + Hyprland Linux distribution by DHH. Keeps your Emacs theme and default font in lockstep with the rest of the desktop, ships 13 Modus-derived themes faithful to their Neovim counterparts (one per theme Omarchy supports), and wraps the common `omarchy-*` CLI toggles so you don't have to context-switch to a terminal.
 
-On non-Omarchy systems the package loads cleanly and degrades
-gracefully — interactive commands no-op with a message, and
-`omarchy-init` falls back to `omarchy-default-theme`.
+On non-Omarchy systems the package loads cleanly and degrades gracefully — interactive commands no-op with a message, and `omarchy-init` falls back to `omarchy-default-theme`.
 
 ## Table of contents
 
@@ -29,39 +22,30 @@ gracefully — interactive commands no-op with a message, and
 | File | Purpose |
 |---|---|
 | `omarchy.el` | Core package: CLI integration, theme/font pickers, hook installer, desktop toggles, `omarchy-init` |
-| `omarchy-themes.el` | Shared library for the bundled themes; registers the package directory with `custom-theme-load-path` |
+| `omarchy-themes.el` | Shared library for the bundled themes; registers the package directory with `custom-theme-load-path` and defines the `omarchy-themes` customize group |
 | `rose-pine-theme.el` | Rose Pine Dawn, derived from Modus Operandi |
 | `osaka-jade-theme.el` | Osaka Jade, derived from Modus Vivendi (mirrors `bamboo.nvim` *vulgaris*) |
 | `flexoki-light-theme.el` | Flexoki Light, derived from Modus Operandi Tinted |
 | `catppuccin-mocha-theme.el` | Catppuccin Mocha (`catppuccin/nvim`) |
 | `catppuccin-latte-theme.el` | Catppuccin Latte (`catppuccin/nvim` latte flavor) |
-| `tokyo-night-theme.el` | Tokyo Night (`folke/tokyonight.nvim`, night style) |
+| `tokyo-night-theme.el` | Tokyo Night (doom-tokyo-night alignment, night palette) |
 | `gruvbox-theme.el` | Gruvbox dark medium (`ellisonleao/gruvbox.nvim`) |
 | `kanagawa-theme.el` | Kanagawa Wave (`rebelot/kanagawa.nvim`) |
-| `everforest-theme.el` | Everforest soft dark (`sainnhe/everforest`) |
-| `nord-theme.el` | Nord (nordfox variant from `EdenEast/nightfox.nvim`) |
+| `everforest-theme.el` | Everforest medium dark (`theorytoe/everforest-emacs` alignment) |
+| `nord-theme.el` | Nord (doom-nord alignment) |
 | `ristretto-theme.el` | Monokai Pro Ristretto (`gthelding/monokai-pro.nvim`) |
 | `matte-black-theme.el` | Matte Black (`tahayvr/matteblack.nvim`) |
 | `ethereal-theme.el` | Ethereal (`bjarneo/ethereal.nvim`) |
 
-All bundled themes use the public `modus-themes-theme` machinery, so
-you get full coverage of the Modus face catalog (Magit, Org, Eglot,
-tree-sitter, Corfu, Vertico, etc.) without hand-rolling hundreds of
-`custom-theme-set-faces` entries.  Each one's syntax slot mapping
-(keyword, function, variable, string, comment, type, …) is taken from
-the upstream Neovim plugin that Omarchy ships, so code renders
-near-identically across the two editors.
+All bundled themes use the public `modus-themes-theme` machinery, so you get full coverage of the Modus face catalog (Magit, Org, Eglot, tree-sitter, Corfu, Vertico, etc.) without hand-rolling hundreds of `custom-theme-set-faces` entries. Each one's syntax slot mapping (keyword, function, variable, string, comment, type, …) is taken from the upstream Neovim plugin that Omarchy ships, so code renders near-identically across the two editors.
 
 ## Installation
 
 ### Prerequisites
 
 - Emacs 29.1 or newer
-- [`modus-themes`](https://protesilaos.com/emacs/modus-themes) 4.4 or
-  newer (for the bundled themes only — `omarchy.el` itself has no
-  runtime dependencies)
-- Omarchy on the host system, if you want the desktop sync (otherwise
-  it's just a theme pack + small convenience library)
+- [`modus-themes`](https://protesilaos.com/emacs/modus-themes) 4.4 or newer (for the bundled themes only — `omarchy.el` itself has no runtime dependencies)
+- Omarchy on the host system, if you want the desktop sync (otherwise it's just a theme pack + small convenience library)
 
 ### MELPA
 
@@ -77,6 +61,7 @@ Coming soon.
   (setq omarchy-default-theme 'modus-operandi
         omarchy-default-font  "Iosevka Nerd Font Mono")
   :config
+  (require 'omarchy-themes)  ; register bundled themes
   (omarchy-init))
 ```
 
@@ -87,48 +72,43 @@ Clone the repo somewhere, add it to `load-path`, and you're done:
 ```elisp
 (add-to-list 'load-path "~/path/to/omarchy.el")
 (require 'omarchy)
+(require 'omarchy-themes)
 (setq omarchy-default-theme 'modus-operandi)
 (omarchy-init)
 ```
 
 ## Getting started
 
-Three lines gets you the whole experience:
+Four lines gets you the whole experience:
 
 ```elisp
 (require 'omarchy)
+(require 'omarchy-themes)                     ; register bundled themes
 (setq omarchy-default-theme 'modus-operandi)  ; non-Omarchy fallback
 (omarchy-init)                                ; sync theme + font now
 ```
+
+`omarchy-themes` is only needed if you want the bundled themes on `custom-theme-load-path` — the core `omarchy` package itself has no theme dependencies.
 
 On an Omarchy system `omarchy-init` will:
 
 1. Read the current theme from `omarchy-theme-current` and apply it.
 2. Read the current font from `omarchy-font-current` and apply it.
-3. In daemon mode, defer both until the first graphical client attaches
-   (otherwise `font-family-list` is empty and your font choice is
-   silently dropped).
+3. In daemon mode, defer both until the first graphical client attaches (otherwise `font-family-list` is empty and your font choice is silently dropped).
 
-Then install the shell hooks so Omarchy notifies Emacs of future
-changes:
+Then install the shell hooks so Omarchy notifies Emacs of future changes:
 
 ```elisp
 M-x omarchy-install-hooks
 ```
 
-That's it. Change the theme from `walker`, the Omarchy menu, or
-`omarchy-theme-set` in any terminal, and Emacs repaints.
+That's it. Change the theme from `walker`, the Omarchy menu, or `omarchy-theme-set` in any terminal, and Emacs repaints.
 
 ## Themes
 
-Every bundled theme is designed to render source code as identically as
-possible to the Neovim theme Omarchy ships for the same name, so your
-editor looks like every other surface in the Omarchy UI.
+Every bundled theme is designed to render source code as identically as possible to the Neovim theme Omarchy ships for the same name, so your editor looks like every other surface in the Omarchy UI.
 
-For each theme below, the syntax slot mapping (keyword, function,
-variable, string, comment, type, constant, operator, property, …) was
-lifted directly from the upstream Neovim plugin's palette and
-highlight-group files.
+For each theme below, the syntax slot mapping (keyword, function, variable, string, comment, type, constant, operator, property, …) was lifted directly from the upstream Neovim plugin's palette and highlight-group files (or, for Tokyo Night / Nord / Everforest, from the corresponding doom-themes Emacs port, which is the common reference point for "Modus-derived, upstream-faithful" feel).
 
 ### Light themes
 
@@ -144,43 +124,29 @@ highlight-group files.
 |---|---|---|---|
 | Osaka Jade | `osaka-jade` | `ribru17/bamboo.nvim` *vulgaris* | keyword purple · function blue · string green · variable fg-plain |
 | Catppuccin Mocha | `catppuccin-mocha` | `catppuccin/nvim` | keyword mauve · function blue · string green · variable flamingo |
-| Tokyo Night | `tokyo-night` | `folke/tokyonight.nvim` night | keyword cyan · function blue · string green · variable magenta |
+| Tokyo Night | `tokyo-night` | `doom-tokyo-night` alignment (night palette) | keyword magenta · function blue · string green · variable base8 |
 | Gruvbox | `gruvbox` | `ellisonleao/gruvbox.nvim` | keyword red · function green+bold · string green · variable blue |
 | Kanagawa Wave | `kanagawa` | `rebelot/kanagawa.nvim` | keyword oniViolet · function crystalBlue · string springGreen · variable fujiWhite |
-| Everforest | `everforest` | `sainnhe/everforest` soft | keyword red · function green · string green · variable blue |
-| Nord | `nord` | `EdenEast/nightfox.nvim` nordfox | keyword magenta · function blue.bright · string green · variable white |
+| Everforest | `everforest` | `theorytoe/everforest-emacs` (medium dark) | keyword red · function green · string green · variable blue |
+| Nord | `nord` | `doom-nord` alignment | keyword blue · function cyan · string green · variable base7 |
 | Ristretto | `ristretto` | `gthelding/monokai-pro.nvim` ristretto filter | keyword red italic · function green · string yellow · variable white |
 | Matte Black | `matte-black` | `tahayvr/matteblack.nvim` | keyword green · function crimson · string fg-neutral · variable amber |
 | Ethereal | `ethereal` | `bjarneo/ethereal.nvim` | keyword purple-bold · function magenta2 · string green · variable magenta2 |
 
-Every theme follows the same defaults, all of which can be turned off
-or retargeted — see [Customizing a theme](#customizing-a-theme) below:
+Every theme follows the same defaults, all of which can be turned off or retargeted — see [Customizing a theme](#customizing-a-theme) below:
 
-- **Comments are italic**, everything else upright.  Toggle with
-  `modus-themes-italic-constructs` and reload the theme.
-- **Variables are not italic** even when the upstream Neovim highlight
-  group implies it, because in Emacs that bleeds through
-  `help-argument-name` / function parameters / magit into places where
-  it hurts readability.  Override `font-lock-variable-name-face` if
-  you'd like it back.
-- **Bold is opt-in and reserved** for what upstream actually bolds
-  (Gruvbox functions, Ethereal's keyword/function/type).  Toggle
-  globally with `modus-themes-bold-constructs`.
-- `bg-region` / `bg-hl-line` / `bg-paren-match` are tuned to match the
-  upstream plugin's visual selection and cursor line, not Modus's
-  defaults — override via the theme's `*-palette-overrides` defcustom.
+- **Comments are italic**, everything else upright. Toggle with `modus-themes-italic-constructs` and reload the theme.
+- **Variables are not italic** even when the upstream Neovim highlight group implies it, because in Emacs that bleeds through `help-argument-name` / function parameters / magit into places where it hurts readability. Override `font-lock-variable-name-face` if you'd like it back.
+- **Bold is opt-in and reserved** for what upstream actually bolds (Gruvbox functions, Ethereal's keyword/function/type). Toggle globally with `modus-themes-bold-constructs`.
+- `bg-region` / `bg-hl-line` / `bg-paren-match` are tuned to match the upstream plugin's visual selection and cursor line, not Modus's defaults — override via the theme's `*-palette-overrides` defcustom.
 
 ### Customizing a theme
 
-Because every bundled theme derives from Modus, the whole
-`modus-themes` customization surface works out of the box.  Three
-knobs cover 95% of what most people want:
+Because every bundled theme derives from Modus, the whole `modus-themes` customization surface works out of the box.
 
-**Colors** — `<theme>-palette-overrides` changes any palette slot
-without editing the theme file.  See
-[Modus's palette override guide][modus-overrides] for all available
-semantic slot names (`comment`, `keyword`, `fnname`, `string`,
-`bg-region`, `fg-heading-1`, etc.).
+All 13 bundled themes register their `<theme>-palette-overrides` defcustoms under the `omarchy-themes` customize group (itself a child of the `modus-themes` group). `M-x customize-group RET omarchy-themes RET` gives you a single screen with every bundled theme's override slot.
+
+**Colors** — `<theme>-palette-overrides` changes any palette slot without editing the theme file. See [Modus's palette override guide][modus-overrides] for all available semantic slot names (`comment`, `keyword`, `fnname`, `string`, `bg-region`, `fg-heading-1`, etc.).
 
 ```elisp
 (setq rose-pine-palette-overrides
@@ -188,22 +154,16 @@ semantic slot names (`comment`, `keyword`, `fnname`, `string`,
         (bg-region "#e4d7c7")))   ; warmer selection
 ```
 
-**Italics and bold** — the bundled themes pre-set these to match
-upstream (e.g. italic comments for every theme, bold functions for
-Gruvbox, bold keyword/function/type for Ethereal).  You can override
-globally with Modus's own variables:
+**Italics and bold** — the bundled themes pre-set these to match upstream (e.g. italic comments for every theme, bold functions for Gruvbox, bold keyword/function/type for Ethereal). You can override globally with Modus's own variables:
 
 ```elisp
 (setq modus-themes-italic-constructs nil   ; turn italics off globally
       modus-themes-bold-constructs   t)    ; turn bold on globally
 ```
 
-After changing these, reload the theme (`M-x load-theme RET <theme>
-RET`) so Modus regenerates its faces with the new settings — they're
-read at face-generation time, not at face-application time.
+After changing these, reload the theme (`M-x load-theme RET <theme> RET`) so Modus regenerates its faces with the new settings — they're read at face-generation time, not at face-application time.
 
-**Font weight/slant of individual faces** — use standard
-`custom-set-faces` or `face-remap`.  Common ones:
+**Font weight/slant of individual faces** — use standard `custom-set-faces` or `face-remap`. Common ones:
 
 ```elisp
 (custom-set-faces
@@ -211,10 +171,7 @@ read at face-generation time, not at face-application time.
  '(font-lock-comment-face  ((t (:slant normal)))))  ; unitalic comments
 ```
 
-For deeper customization — headings with different weights per level,
-org-block backgrounds, completion highlights, diff colors — every
-relevant Modus face still responds to its documented customization
-knobs.  See the [Modus themes manual][modus-manual] for the full list.
+For deeper customization — headings with different weights per level, org-block backgrounds, completion highlights, diff colors — every relevant Modus face still responds to its documented customization knobs. See the [Modus themes manual][modus-manual] for the full list.
 
 [modus-overrides]: https://protesilaos.com/emacs/modus-themes#h:a9956d15-7ab7-4f7e-96fe-58f1a002510e
 [modus-manual]: https://protesilaos.com/emacs/modus-themes
@@ -238,8 +195,7 @@ knobs.  See the [Modus themes manual][modus-manual] for the full list.
 | `M-x omarchy-lock-screen` | `omarchy-lock-screen` |
 | `M-x omarchy-terminal-at-cwd` | `omarchy-cmd-terminal-cwd` (with `default-directory` set to the buffer's directory) |
 
-All toggles are launched detached via `setsid`, so processes like
-waybar survive after the wrapper script exits.
+All toggles are launched detached via `setsid`, so processes like waybar survive after the wrapper script exits.
 
 ### Apply-only (called by shell hooks, but also usable directly)
 
@@ -256,8 +212,7 @@ waybar survive after the wrapper script exits.
 
 ## Customization
 
-All user-facing variables are in the `omarchy` customize group
-(`M-x customize-group RET omarchy RET`).
+Core user-facing variables live in the `omarchy` customize group (`M-x customize-group RET omarchy RET`). Per-theme palette overrides live in the `omarchy-themes` group (a child of `modus-themes`).
 
 ```elisp
 ;; Fallback theme if Omarchy is unavailable or the lookup fails.
@@ -275,15 +230,16 @@ All user-facing variables are in the `omarchy` customize group
 (add-to-list 'omarchy-theme-map
              '("My Custom Theme" . my-emacs-theme))
 
+;; Thunk form — useful when the theme needs setup before it loads
 (add-to-list 'omarchy-theme-map
              '("Catppuccin Frappe" .
-               (lambda () (setq catppuccin-flavor 'frappe)
-                 (omarchy--raw-load-theme 'catppuccin))))
+               (lambda ()
+                 (setq catppuccin-flavor 'frappe)
+                 (mapc #'disable-theme custom-enabled-themes)
+                 (load-theme 'catppuccin :no-confirm))))
 ```
 
-The full default `omarchy-theme-map` (as shipped) — every entry points
-at a theme bundled in this package, so no additional theme dependencies
-are required:
+The full default `omarchy-theme-map` (as shipped) — every entry points at a theme bundled in this package, so no additional theme dependencies are required:
 
 ```
 "Catppuccin"       -> catppuccin-mocha
@@ -301,17 +257,11 @@ are required:
 "Tokyo Night"      -> tokyo-night
 ```
 
-If you prefer a third-party Emacs theme over the bundled one, just
-override the map entry — for example `(add-to-list 'omarchy-theme-map
-'("Gruvbox" . doom-gruvbox))`.  `omarchy-apply-theme` will fall back to
-`omarchy-default-theme` with a message if the target theme fails to
-load.
+If you prefer a third-party Emacs theme over the bundled one, just override the map entry — for example `(add-to-list 'omarchy-theme-map '("Gruvbox" . doom-gruvbox))`. `omarchy-apply-theme` will fall back to `omarchy-default-theme` with a message if the target theme fails to load.
 
 ## Shell hook integration
 
-Omarchy invokes scripts in `~/.config/omarchy/hooks/` whenever the
-system theme or font changes. `omarchy-install-hooks` writes two of
-them:
+Omarchy invokes scripts in `~/.config/omarchy/hooks/` whenever the system theme or font changes. `omarchy-install-hooks` writes two of them:
 
 **`~/.config/omarchy/hooks/theme-set`**:
 
@@ -324,17 +274,11 @@ if command -v emacsclient >/dev/null 2>&1 && pgrep -x emacs >/dev/null; then
 fi
 ```
 
-**`~/.config/omarchy/hooks/font-set`** is identical but calls
-`omarchy-apply-font`.
+**`~/.config/omarchy/hooks/font-set`** is identical but calls `omarchy-apply-font`.
 
-The `pgrep` guard avoids starting a new Emacs if you don't have one
-running, so the hooks are safe to leave installed even when you're
-using a different editor.
+The `pgrep` guard avoids starting a new Emacs if you don't have one running, so the hooks are safe to leave installed even when you're using a different editor.
 
-If you already maintain hooks by hand,
-`omarchy-install-hooks` **overwrites** them without warning. Edit
-`omarchy--hook-script-template` or skip the installer and write them
-yourself.
+If you already maintain hooks by hand, `omarchy-install-hooks` **overwrites** them without warning. Edit `omarchy--hook-script-template` or skip the installer and write them yourself.
 
 ## How the sync works
 
@@ -350,55 +294,35 @@ yourself.
  emacsclient -e '(omarchy-apply-theme "Tokyo Night")'
          │
          ▼
- omarchy--lookup-theme → "Tokyo Night" → 'doom-tokyo-night
+ omarchy--lookup-theme → "Tokyo Night" → 'tokyo-night
          │
          ▼
- disable-theme <old>; load-theme 'doom-tokyo-night
+ disable-theme <old>; load-theme 'tokyo-night
 ```
 
 Two subtleties that matter:
 
-1. **`omarchy-set-theme` is fire-and-forget.** It calls
-   `omarchy-theme-set` on the CLI and returns. The emacsclient
-   round-trip from the shell hook is what actually updates Emacs —
-   this avoids double-application.
+1. **`omarchy-set-theme` is fire-and-forget.** It calls `omarchy-theme-set` on the CLI and returns. The emacsclient round-trip from the shell hook is what actually updates Emacs — this avoids double-application.
 
-2. **Font is applied before theme.** In daemon mode specifically,
-   `omarchy-init` waits for `server-after-make-frame-hook`, because
-   `font-family-list` is empty until a display connection exists.
+2. **Font syncs before theme, and both wait for a display in daemon mode.** `omarchy-init` applies font first, theme second. When Emacs is running as a daemon with no graphical client yet, `font-family-list` is empty — so the initial sync waits on `server-after-make-frame-hook` for the first frame to attach, then runs once.
 
 ## FAQ
 
-**Does `omarchy-apply-font` conflict with Fontaine?**
-No. When called without an explicit `HEIGHT`, it reads and preserves
-the current `:height` on the `default` face — so Fontaine-managed size
-presets survive a font family change. Fontaine owns size; Omarchy owns
-family.
+**Does `omarchy-apply-font` conflict with Fontaine?** No. When called without an explicit `HEIGHT`, it reads and preserves the current `:height` on the `default` face — so Fontaine-managed size presets survive a font family change. Fontaine owns size; Omarchy owns family.
 
-**Can I use just the themes without the rest of the package?**
-Yes. Each theme is self-contained once `omarchy-themes.el` is on your
-`load-path`. You don't need to `(require 'omarchy)` or call
-`(omarchy-init)`.
+**Can I use just the themes without the rest of the package?** Yes. The themes depend only on `omarchy-themes.el` (which brings in `modus-themes`) — not on `omarchy.el`. Add the repo to `load-path`, `(require 'omarchy-themes)`, then `M-x load-theme RET <any-bundled-theme> RET`. No `omarchy-init`, no Omarchy CLI dependency.
 
-**I'm not on Omarchy — is this still useful?**
-The themes are standalone and usable on any Emacs. The core package
-degrades to a no-op on non-Omarchy systems, so it's safe to leave in
-your config if you occasionally boot between distros. Interactive
-commands will just message "Omarchy not available".
+**I'm not on Omarchy — is this still useful?** The themes are standalone and usable on any Emacs. The core package degrades to a no-op on non-Omarchy systems, so it's safe to leave in your config if you occasionally boot between distros. Interactive commands will just message "Omarchy not available".
 
-**Why derive from Modus instead of hand-rolling faces?**
-`modus-themes-theme` expands into a `custom-theme-set-faces` block
-generated from Modus's comprehensive ~400-face catalog against your
-palette. You get Magit, Org, Eglot, tree-sitter, Corfu, Vertico, and
-dozens of other packages styled coherently for free — and future Modus
-updates bring new package coverage without any work on your end. See
-the Modus Info node *Build on top of the Modus themes* for the pattern.
+**Why derive from Modus instead of hand-rolling faces?** `modus-themes-theme` expands into a `custom-theme-set-faces` block generated from Modus's comprehensive ~400-face catalog against your palette. You get Magit, Org, Eglot, tree-sitter, Corfu, Vertico, and dozens of other packages styled coherently for free — and future Modus updates bring new package coverage without any work on your end. See the Modus Info node *Build on top of the Modus themes* for the pattern.
+
+**I set `<theme>-palette-overrides` but nothing changed.** Palette overrides are baked into face specs when the theme loads. Reload the theme after changing them: `M-x load-theme RET <theme> RET` (or just toggle away and back via `omarchy-theme-pick`). Same applies to `modus-themes-italic-constructs` and `modus-themes-bold-constructs`.
 
 ## Status
 
 Alpha. Interfaces may change before 0.1 is released. In particular:
 
-- More bundled themes may land (Kanagawa, Matte Black).
+- All 13 Omarchy theme names mapped by default are bundled. New additions would need a matching Omarchy theme (e.g. `hackerman`, `lumon`, `retro-82`, `vantablack`, `white`, `miasma` are not yet bundled; the core package still handles them via `omarchy-theme-map` if you wire up a third-party Emacs theme).
 - Battery / power / brightness toggles are planned.
 
 Bug reports, palette nits, and theme submissions welcome.
