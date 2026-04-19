@@ -4,8 +4,15 @@ Emacs integration for [Omarchy](https://omarchy.org), the opinionated Arch + Hyp
 
 On non-Omarchy systems the package loads cleanly and degrades gracefully — interactive commands no-op with a message, and `omarchy-init` falls back to `omarchy-default-theme`.
 
+## Demo
+
+https://github.com/ovistoica/omarchy.el/raw/main/resources/demo.mp4
+
+(If the video doesn't play inline, [download / open it here](resources/demo.mp4).)
+
 ## Table of contents
 
+- [Demo](#demo)
 - [What's in the box](#whats-in-the-box)
 - [Installation](#installation)
 - [Getting started](#getting-started)
