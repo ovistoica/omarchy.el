@@ -222,7 +222,7 @@ renders source code consistently with the reference implementation.")
   "User-level palette overrides for the Flexoki Light theme.
 Same format as `modus-themes-common-palette-overrides'."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Extra faces: Flexoki italicizes only comments/docstrings (not
 ;; variables).  Modus's `modus-themes-italic-constructs' makes

@@ -196,7 +196,7 @@
 (defcustom catppuccin-latte-palette-overrides nil
   "User-level palette overrides for the Catppuccin Latte theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 (defvar catppuccin-latte-custom-faces
   '(`(font-lock-variable-name-face ((,c :foreground ,cat-flamingo :slant normal)))

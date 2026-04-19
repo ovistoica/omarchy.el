@@ -1,4 +1,4 @@
-;;; nord-theme.el --- Nordfox, derived from Modus  -*- lexical-binding: t; -*-
+;;; nord-theme.el --- Nord, derived from Modus  -*- lexical-binding: t; -*-
 
 ;; Author: Ovidiu Stoica <ovidiu.stoica1094@gmail.com>
 ;; URL: https://github.com/ovistoica/omarchy.el
@@ -8,91 +8,89 @@
 
 ;;; Commentary:
 ;;
-;; Nord (nordfox variant) for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the syntax.* spec from
-;; EdenEast/nightfox.nvim (palette/nordfox.lua), which is what Omarchy's
-;; Nord theme uses in Neovim.
+;; Nord for Emacs, derived from Modus Vivendi via `modus-themes-theme'.
+;; Mirrors the slot mapping from doom-themes/doom-nord.
 ;;
-;; Keyword/Statement -> magenta, Conditional -> magenta.bright,
-;; Function -> blue.bright, Identifier -> cyan, Variable -> white,
-;; Type -> yellow, Const/Number -> orange, String -> green,
-;; PreProc -> pink.bright, Comment -> muted.
+;; Key semantic groups (doom "face categories"):
+;;   keyword  blue       builtin   blue       operator  blue
+;;   function cyan       methods   cyan       type      teal
+;;   strings  green      variables base7      numbers   magenta
+;;   constants blue      region    base4      comments  lightened-base5
 
 ;;; Code:
 
 (require 'omarchy-themes)
 
 (defconst nord-palette-partial
-  '(;; Core surfaces (nordfox)
-    (bg-main       "#2e3440")  ; bg1
-    (bg-dim        "#232831")  ; bg0
-    (bg-alt        "#39404f")  ; bg2
-    (bg-active     "#444c5e")  ; bg3
-    (bg-inactive   "#232831")
-    (border        "#5a657d")  ; bg4
+  '(;; Core surfaces (doom-nord)
+    (bg-main       "#2e3440")  ; bg
+    (bg-dim        "#272c36")  ; bg-alt
+    (bg-alt        "#373e4c")  ; base3
+    (bg-active     "#434c5e")  ; base4 — region
+    (bg-inactive   "#242832")  ; base1
+    (border        "#4c566a")  ; base5
 
     ;; Foregrounds
-    (fg-main       "#cdcecf")  ; fg1
-    (fg-dim        "#60728a")  ; comment
-    (fg-alt        "#abb1bb")  ; fg2
-    (cursor        "#d8dee9")
+    (fg-main       "#eceff4")  ; fg
+    (fg-dim        "#606977")  ; lightened base5 (comments)
+    (fg-alt        "#e5e9f0")  ; fg-alt
+    (cursor        "#d8dee9")  ; base7
 
-    ;; Nordfox named slots
-    (nord-red         "#bf616a")
-    (nord-red-bright  "#d06f79")
-    (nord-green       "#a3be8c")
-    (nord-yellow      "#ebcb8b")
-    (nord-yellow-bright "#f0d399")
-    (nord-blue        "#81a1c1")
-    (nord-blue-bright "#8cafd2")
-    (nord-magenta     "#b48ead")
-    (nord-magenta-bright "#c895bf")
-    (nord-cyan        "#88c0d0")
-    (nord-cyan-bright "#93ccdc")
-    (nord-orange      "#c9826b")
-    (nord-orange-bright "#d89079")
-    (nord-pink        "#bf88bc")
-    (nord-pink-bright "#d092ce")
-    (nord-white       "#e5e9f0")
-    (nord-comment     "#60728a")
-    (nord-fg2         "#abb1bb")
-    (nord-fg3         "#7e8188")
-    (nord-sel0        "#3e4a5b")
-    (nord-sel1        "#4f6074")
+    ;; Doom Nord named slots
+    (nord-base0    "#191c25")
+    (nord-base1    "#242832")
+    (nord-base2    "#2c333f")
+    (nord-base3    "#373e4c")
+    (nord-base4    "#434c5e")
+    (nord-base5    "#4c566a")
+    (nord-base6    "#9099ab")
+    (nord-base7    "#d8dee9")  ; variables
+    (nord-base8    "#f0f4fc")
+    (nord-red      "#bf616a")
+    (nord-orange   "#d08770")
+    (nord-green    "#a3be8c")  ; strings
+    (nord-teal     "#8fbcbb")  ; type
+    (nord-yellow   "#ebcb8b")
+    (nord-blue     "#81a1c1")  ; keyword, builtin, constant, operator
+    (nord-dark-blue "#5e81ac")
+    (nord-magenta  "#b48ead")  ; numbers
+    (nord-violet   "#5d80ae")
+    (nord-cyan     "#88c0d0")  ; functions, methods
+    (nord-dark-cyan "#507681")
 
     ;; Modus primary color slots
     (red           "#bf616a")
-    (red-warmer    "#c9826b")
+    (red-warmer    "#d08770")
     (red-cooler    "#bf616a")
-    (red-faint     "#a54e56")
-    (red-intense   "#d06f79")
+    (red-faint     "#bf616a")
+    (red-intense   "#bf616a")
     (green         "#a3be8c")
     (green-warmer  "#a3be8c")
-    (green-cooler  "#88c0d0")
-    (green-faint   "#8aa872")
-    (green-intense "#b1d196")
+    (green-cooler  "#8fbcbb")
+    (green-faint   "#a3be8c")
+    (green-intense "#a3be8c")
     (yellow        "#ebcb8b")
-    (yellow-warmer "#c9826b")
+    (yellow-warmer "#d08770")
     (yellow-cooler "#ebcb8b")
-    (yellow-faint  "#d9b263")
-    (yellow-intense "#f0d399")
+    (yellow-faint  "#ebcb8b")
+    (yellow-intense "#ebcb8b")
     (blue          "#81a1c1")
-    (blue-warmer   "#8cafd2")
+    (blue-warmer   "#5e81ac")
     (blue-cooler   "#88c0d0")
-    (blue-faint    "#668aab")
-    (blue-intense  "#8cafd2")
+    (blue-faint    "#81a1c1")
+    (blue-intense  "#81a1c1")
     (magenta       "#b48ead")
-    (magenta-warmer "#c895bf")
-    (magenta-cooler "#b48ead")
-    (magenta-faint "#9d7495")
-    (magenta-intense "#c895bf")
+    (magenta-warmer "#b48ead")
+    (magenta-cooler "#5d80ae")
+    (magenta-faint "#b48ead")
+    (magenta-intense "#b48ead")
     (cyan          "#88c0d0")
-    (cyan-warmer   "#93ccdc")
-    (cyan-cooler   "#81a1c1")
-    (cyan-faint    "#69a7ba")
-    (cyan-intense  "#93ccdc")
+    (cyan-warmer   "#88c0d0")
+    (cyan-cooler   "#507681")
+    (cyan-faint    "#88c0d0")
+    (cyan-intense  "#88c0d0")
 
-    ;; Diff backgrounds (blended per nordfox spec)
+    ;; Diff backgrounds (nord-muted)
     (bg-added            "#2f3e3c")
     (bg-added-faint      "#28342f")
     (bg-added-refine     "#3e5749")
@@ -108,35 +106,35 @@
     (fg-removed-intense  "#d88088")
 
     (bg-changed          "#303a47")
-    (bg-changed-faint    "#283039)")
+    (bg-changed-faint    "#283039")
     (bg-changed-refine   "#3f4d5c")
     (bg-changed-intense  "#536578")
     (fg-changed          "#81a1c1")
     (fg-changed-intense  "#9db4cf"))
-  "Nordfox base colors, in Modus palette format.")
+  "Nord base colors, aligned with doom-themes' doom-nord.")
 
 (defconst nord-palette-mappings-partial
-  '(;; ---- Syntax (matches nightfox.nvim nordfox syntax spec) ----
-    (keyword         nord-magenta)        ; Keyword, Statement -> magenta.base
-    (builtin         nord-red)            ; builtin0 -> red.base
-    (constant        nord-orange-bright)  ; const -> orange.bright
-    (fnname          nord-blue-bright)    ; func -> blue.bright
-    (fnname-call     nord-blue-bright)
-    (name            nord-blue-bright)
-    (type            nord-yellow)         ; type -> yellow.base
-    (variable        nord-white)          ; variable -> white.base
-    (variable-use    nord-white)
-    (identifier      nord-cyan)           ; ident -> cyan.base
-    (property        nord-blue)           ; field -> blue.base
-    (property-use    nord-blue)
-    (string          nord-green)          ; string -> green.base
+  '(;; ---- Syntax (matches doom-nord face categories) ----
+    (keyword         nord-blue)         ; keyword -> blue
+    (builtin         nord-blue)         ; builtin -> blue
+    (constant        nord-blue)         ; constants -> blue
+    (fnname          nord-cyan)         ; functions -> cyan
+    (fnname-call     nord-cyan)
+    (name            nord-cyan)
+    (type            nord-teal)         ; type -> teal
+    (variable        nord-base7)        ; variables -> base7
+    (variable-use    nord-base7)
+    (identifier      nord-base7)
+    (property        nord-base7)
+    (property-use    nord-base7)
+    (string          nord-green)        ; strings -> green
     (docstring       nord-green)
-    (comment         nord-comment)        ; italic
-    (preprocessor    nord-pink-bright)    ; preproc -> pink.bright
-    (operator        nord-fg2)            ; operator -> fg2
-    (punctuation     nord-fg2)            ; bracket -> fg2
-    (rx-construct    nord-yellow-bright)  ; regex -> yellow.bright
-    (rx-backslash    nord-cyan-bright)
+    (comment         fg-dim)            ; comments -> lightened base5
+    (preprocessor    nord-blue)
+    (operator        nord-blue)         ; operators -> blue
+    (punctuation     nord-base7)
+    (rx-construct    nord-magenta)
+    (rx-backslash    nord-cyan)
 
     ;; ---- Status / diagnostics ----
     (err             nord-red)
@@ -157,19 +155,19 @@
     (modeline-info             nord-blue)
 
     ;; ---- Line numbers ----
-    (fg-line-number-inactive   nord-fg3)
-    (fg-line-number-active     nord-orange-bright)
+    (fg-line-number-inactive   nord-base5)
+    (fg-line-number-active     nord-base7)
     (bg-line-number-inactive   bg-main)
     (bg-line-number-active     bg-alt)
 
     ;; ---- Region / highlight / search ----
-    (bg-region                 nord-sel0)
+    (bg-region                 nord-base4)  ; doom default
     (fg-region                 fg-main)
-    (bg-hl-line                bg-active)
-    (bg-paren-match            bg-alt)
+    (bg-hl-line                bg-alt)
+    (bg-paren-match            bg-active)
     (fg-paren-match            nord-orange)
     (bg-search-current         nord-yellow)
-    (bg-search-lazy            nord-sel1)
+    (bg-search-lazy            bg-active)
 
     ;; ---- Completion / popups ----
     (bg-completion             bg-alt)
@@ -183,16 +181,16 @@
     (prompt                    nord-blue)
 
     ;; ---- Headings ----
-    (fg-heading-0              nord-blue-bright)
+    (fg-heading-0              nord-cyan)
     (fg-heading-1              nord-blue)
-    (fg-heading-2              nord-cyan)
+    (fg-heading-2              nord-teal)
     (fg-heading-3              nord-green)
     (fg-heading-4              nord-yellow)
     (fg-heading-5              nord-magenta)
     (fg-heading-6              nord-orange)
     (fg-heading-7              nord-red)
-    (fg-heading-8              nord-pink))
-  "Semantic slot mappings for Nordfox.")
+    (fg-heading-8              nord-dark-cyan))
+  "Semantic slot mappings for Nord (doom-themes alignment).")
 
 (defconst nord-palette
   (modus-themes-generate-palette
@@ -205,13 +203,14 @@
 (defcustom nord-palette-overrides nil
   "User-level palette overrides for the Nord theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
-;; Nordfox: comments italic, variables plain fg.
+;; doom-nord does not italicize; we italicize comments for parity with
+;; the rest of the omarchy pack.  Variables stay plain base7.
 (defvar nord-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,nord-white :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,nord-white :slant normal)))
-    `(help-argument-name           ((,c :foreground ,nord-white :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,nord-base7 :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,nord-base7 :slant normal)))
+    `(help-argument-name           ((,c :foreground ,nord-base7 :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar nord-custom-variables nil
@@ -222,7 +221,7 @@
   (modus-themes-theme
    'nord
    'omarchy-themes
-   "Nord (nordfox), derived from Modus Vivendi."
+   "Nord, derived from Modus Vivendi."
    'dark
    'modus-themes-vivendi-palette
    'nord-palette

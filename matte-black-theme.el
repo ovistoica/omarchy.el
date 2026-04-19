@@ -199,7 +199,7 @@
 (defcustom matte-black-palette-overrides nil
   "User-level palette overrides for the Matte Black theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Matte Black italicizes comments; variables plain amber.
 (defvar matte-black-custom-faces

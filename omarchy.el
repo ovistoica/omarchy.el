@@ -183,7 +183,7 @@ directly), or a function (called for side effects)."
         (cond
          ((functionp handler) (funcall handler) (message "Theme set to %s" theme-spec))
          ((symbolp handler)   (omarchy--raw-load-theme handler)
-                              (message "Theme set to %s" handler)))
+          (message "Theme set to %s" handler)))
       (error
        (message "omarchy: failed to load theme %S: %s"
                 theme-spec (error-message-string err))

@@ -199,7 +199,7 @@
 (defcustom kanagawa-palette-overrides nil
   "User-level palette overrides for the Kanagawa theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Kanagawa italicizes comments.  Variables are plain fg.
 (defvar kanagawa-custom-faces

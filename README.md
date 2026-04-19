@@ -33,11 +33,24 @@ gracefully — interactive commands no-op with a message, and
 | `rose-pine-theme.el` | Rose Pine Dawn, derived from Modus Operandi |
 | `osaka-jade-theme.el` | Osaka Jade, derived from Modus Vivendi (mirrors `bamboo.nvim` *vulgaris*) |
 | `flexoki-light-theme.el` | Flexoki Light, derived from Modus Operandi Tinted |
+| `catppuccin-mocha-theme.el` | Catppuccin Mocha (`catppuccin/nvim`) |
+| `catppuccin-latte-theme.el` | Catppuccin Latte (`catppuccin/nvim` latte flavor) |
+| `tokyo-night-theme.el` | Tokyo Night (`folke/tokyonight.nvim`, night style) |
+| `gruvbox-theme.el` | Gruvbox dark medium (`ellisonleao/gruvbox.nvim`) |
+| `kanagawa-theme.el` | Kanagawa Wave (`rebelot/kanagawa.nvim`) |
+| `everforest-theme.el` | Everforest soft dark (`sainnhe/everforest`) |
+| `nord-theme.el` | Nord (nordfox variant from `EdenEast/nightfox.nvim`) |
+| `ristretto-theme.el` | Monokai Pro Ristretto (`gthelding/monokai-pro.nvim`) |
+| `matte-black-theme.el` | Matte Black (`tahayvr/matteblack.nvim`) |
+| `ethereal-theme.el` | Ethereal (`bjarneo/ethereal.nvim`) |
 
-All three bundled themes use the public `modus-themes-theme` machinery,
-so you get full coverage of the Modus face catalog (Magit, Org, Eglot,
+All bundled themes use the public `modus-themes-theme` machinery, so
+you get full coverage of the Modus face catalog (Magit, Org, Eglot,
 tree-sitter, Corfu, Vertico, etc.) without hand-rolling hundreds of
-`custom-theme-set-faces` entries.
+`custom-theme-set-faces` entries.  Each one's syntax slot mapping
+(keyword, function, variable, string, comment, type, …) is taken from
+the upstream Neovim plugin that Omarchy ships, so code renders
+near-identically across the two editors.
 
 ## Installation
 
@@ -108,59 +121,103 @@ That's it. Change the theme from `walker`, the Omarchy menu, or
 
 ## Themes
 
-The three bundled themes are designed to render source code as
-identically as possible to the Neovim themes Omarchy ships, so your
+Every bundled theme is designed to render source code as identically as
+possible to the Neovim theme Omarchy ships for the same name, so your
 editor looks like every other surface in the Omarchy UI.
 
-### Rose Pine
+For each theme below, the syntax slot mapping (keyword, function,
+variable, string, comment, type, constant, operator, property, …) was
+lifted directly from the upstream Neovim plugin's palette and
+highlight-group files.
 
-A "soho vibes for your terminal" light theme, matched to
-[rose-pine/neovim](https://github.com/rose-pine/neovim). Keywords in
-pine, functions in rose, strings in gold, comments in subtle with
-italics.
+### Light themes
+
+| Theme | Symbol | Upstream | Highlights |
+|---|---|---|---|
+| Rose Pine Dawn | `rose-pine` | `rose-pine/neovim` | keyword pine · function rose · string gold · variable text upright |
+| Flexoki Light | `flexoki-light` | `crmsnbleyd/flexoki-emacs-theme` | keyword magenta · function orange · string cyan · variable blue |
+| Catppuccin Latte | `catppuccin-latte` | `catppuccin/nvim` latte | keyword mauve · function blue · string green · variable flamingo |
+
+### Dark themes
+
+| Theme | Symbol | Upstream | Highlights |
+|---|---|---|---|
+| Osaka Jade | `osaka-jade` | `ribru17/bamboo.nvim` *vulgaris* | keyword purple · function blue · string green · variable fg-plain |
+| Catppuccin Mocha | `catppuccin-mocha` | `catppuccin/nvim` | keyword mauve · function blue · string green · variable flamingo |
+| Tokyo Night | `tokyo-night` | `folke/tokyonight.nvim` night | keyword cyan · function blue · string green · variable magenta |
+| Gruvbox | `gruvbox` | `ellisonleao/gruvbox.nvim` | keyword red · function green+bold · string green · variable blue |
+| Kanagawa Wave | `kanagawa` | `rebelot/kanagawa.nvim` | keyword oniViolet · function crystalBlue · string springGreen · variable fujiWhite |
+| Everforest | `everforest` | `sainnhe/everforest` soft | keyword red · function green · string green · variable blue |
+| Nord | `nord` | `EdenEast/nightfox.nvim` nordfox | keyword magenta · function blue.bright · string green · variable white |
+| Ristretto | `ristretto` | `gthelding/monokai-pro.nvim` ristretto filter | keyword red italic · function green · string yellow · variable white |
+| Matte Black | `matte-black` | `tahayvr/matteblack.nvim` | keyword green · function crimson · string fg-neutral · variable amber |
+| Ethereal | `ethereal` | `bjarneo/ethereal.nvim` | keyword purple-bold · function magenta2 · string green · variable magenta2 |
+
+Every theme follows the same defaults, all of which can be turned off
+or retargeted — see [Customizing a theme](#customizing-a-theme) below:
+
+- **Comments are italic**, everything else upright.  Toggle with
+  `modus-themes-italic-constructs` and reload the theme.
+- **Variables are not italic** even when the upstream Neovim highlight
+  group implies it, because in Emacs that bleeds through
+  `help-argument-name` / function parameters / magit into places where
+  it hurts readability.  Override `font-lock-variable-name-face` if
+  you'd like it back.
+- **Bold is opt-in and reserved** for what upstream actually bolds
+  (Gruvbox functions, Ethereal's keyword/function/type).  Toggle
+  globally with `modus-themes-bold-constructs`.
+- `bg-region` / `bg-hl-line` / `bg-paren-match` are tuned to match the
+  upstream plugin's visual selection and cursor line, not Modus's
+  defaults — override via the theme's `*-palette-overrides` defcustom.
+
+### Customizing a theme
+
+Because every bundled theme derives from Modus, the whole
+`modus-themes` customization surface works out of the box.  Three
+knobs cover 95% of what most people want:
+
+**Colors** — `<theme>-palette-overrides` changes any palette slot
+without editing the theme file.  See
+[Modus's palette override guide][modus-overrides] for all available
+semantic slot names (`comment`, `keyword`, `fnname`, `string`,
+`bg-region`, `fg-heading-1`, etc.).
 
 ```elisp
-(load-theme 'rose-pine t)
-```
-
-### Osaka Jade
-
-Deep green dark theme with Japanese bamboo palette, matched to
-[ribru17/bamboo.nvim](https://github.com/ribru17/bamboo.nvim) (the
-*vulgaris* variant). Keywords in purple, functions in blue, types in
-yellow, comments in warm bamboo. Surfaces pulled from Omarchy's
-`colors.toml` so the editor blends into the rest of the desktop.
-
-```elisp
-(load-theme 'osaka-jade t)
-```
-
-### Flexoki Light
-
-Steph Ango's "inky color scheme for prose and code", faithful to the
-canonical [flexoki-emacs-theme](https://codeberg.org/crmsnbleyd/flexoki-emacs-theme).
-Paper background, magenta keywords, orange functions, cyan strings,
-blue variables.
-
-```elisp
-(load-theme 'flexoki-light t)
-```
-
-### Tuning italic / bold per theme
-
-Each bundled theme controls its own `modus-themes-italic-constructs`
-and `modus-themes-bold-constructs` via a `let` wrapper around
-`modus-themes-theme`, so you can flip them independently from your
-other Modus-derived themes. Override by editing the theme file or
-using `modus-themes-common-palette-overrides` / the per-theme
-`*-palette-overrides` defcustom:
-
-```elisp
-;; Tweak Rose Pine without editing the theme file
 (setq rose-pine-palette-overrides
       '((comment   "#8b8199")    ; nudge comments brighter
         (bg-region "#e4d7c7")))   ; warmer selection
 ```
+
+**Italics and bold** — the bundled themes pre-set these to match
+upstream (e.g. italic comments for every theme, bold functions for
+Gruvbox, bold keyword/function/type for Ethereal).  You can override
+globally with Modus's own variables:
+
+```elisp
+(setq modus-themes-italic-constructs nil   ; turn italics off globally
+      modus-themes-bold-constructs   t)    ; turn bold on globally
+```
+
+After changing these, reload the theme (`M-x load-theme RET <theme>
+RET`) so Modus regenerates its faces with the new settings — they're
+read at face-generation time, not at face-application time.
+
+**Font weight/slant of individual faces** — use standard
+`custom-set-faces` or `face-remap`.  Common ones:
+
+```elisp
+(custom-set-faces
+ '(font-lock-keyword-face  ((t (:weight bold))))
+ '(font-lock-comment-face  ((t (:slant normal)))))  ; unitalic comments
+```
+
+For deeper customization — headings with different weights per level,
+org-block backgrounds, completion highlights, diff colors — every
+relevant Modus face still responds to its documented customization
+knobs.  See the [Modus themes manual][modus-manual] for the full list.
+
+[modus-overrides]: https://protesilaos.com/emacs/modus-themes#h:a9956d15-7ab7-4f7e-96fe-58f1a002510e
+[modus-manual]: https://protesilaos.com/emacs/modus-themes
 
 ## Interactive commands
 
@@ -224,27 +281,31 @@ All user-facing variables are in the `omarchy` customize group
                  (omarchy--raw-load-theme 'catppuccin))))
 ```
 
-The full default `omarchy-theme-map` (as shipped):
+The full default `omarchy-theme-map` (as shipped) — every entry points
+at a theme bundled in this package, so no additional theme dependencies
+are required:
 
 ```
-"Catppuccin"       -> catppuccin (mocha flavor)
-"Catppuccin Latte" -> catppuccin (latte flavor)
+"Catppuccin"       -> catppuccin-mocha
+"Catppuccin Latte" -> catppuccin-latte
+"Ethereal"         -> ethereal
 "Everforest"       -> everforest
-"Flexoki Light"    -> flexoki-light           (bundled)
-"Gruvbox"          -> doom-gruvbox
+"Flexoki Light"    -> flexoki-light
+"Gruvbox"          -> gruvbox
 "Kanagawa"         -> kanagawa
 "Matte Black"      -> matte-black
-"Nord"             -> doom-nord
-"Osaka Jade"       -> osaka-jade              (bundled)
-"Ristretto"        -> doom-monokai-ristretto
-"Rose Pine"        -> rose-pine               (bundled)
-"Tokyo Night"      -> doom-tokyo-night
-"Ethereal"         -> modus-vivendi-tinted
+"Nord"             -> nord
+"Osaka Jade"       -> osaka-jade
+"Ristretto"        -> ristretto
+"Rose Pine"        -> rose-pine
+"Tokyo Night"      -> tokyo-night
 ```
 
-You're responsible for making sure the target theme package is
-installed — `omarchy-apply-theme` will fall back to
-`omarchy-default-theme` with a message if `load-theme` signals.
+If you prefer a third-party Emacs theme over the bundled one, just
+override the map entry — for example `(add-to-list 'omarchy-theme-map
+'("Gruvbox" . doom-gruvbox))`.  `omarchy-apply-theme` will fall back to
+`omarchy-default-theme` with a message if the target theme fails to
+load.
 
 ## Shell hook integration
 
@@ -333,19 +394,10 @@ dozens of other packages styled coherently for free — and future Modus
 updates bring new package coverage without any work on your end. See
 the Modus Info node *Build on top of the Modus themes* for the pattern.
 
-**Why is my waybar toggle not bringing waybar back?**
-Older versions of this package used `start-process`, which kept Emacs
-as waybar's session leader — when the wrapper script backgrounded
-`uwsm-app -- waybar &` and exited, waybar died orphaned. Current code
-uses `setsid sh -c '... &'` for true detachment. If you're on an old
-version, update.
-
 ## Status
 
 Alpha. Interfaces may change before 0.1 is released. In particular:
 
-- Several `my/*` defaliases are kept temporarily for backward
-  compatibility with un-updated shell hooks; they'll be removed in 0.2.
 - More bundled themes may land (Kanagawa, Matte Black).
 - Battery / power / brightness toggles are planned.
 

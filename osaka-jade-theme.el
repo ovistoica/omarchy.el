@@ -221,7 +221,7 @@ Neovim, so both editors render the same code near-identically.")
   "User-level palette overrides for the Osaka Jade theme.
 Same format as `modus-themes-common-palette-overrides'."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Extra faces: match bamboo.nvim behaviour where Variable / @variable
 ;; are plain fg, not italic.  Also scale org headings.

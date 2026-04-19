@@ -8,70 +8,62 @@
 
 ;;; Commentary:
 ;;
-;; Tokyo Night (night style) for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the highlight mapping from
-;; folke/tokyonight.nvim (groups/base.lua) so Emacs and Neovim render
-;; source code consistently.
+;; Tokyo Night for Emacs, derived from Modus Vivendi via
+;; `modus-themes-theme'.  Mirrors the slot mapping from
+;; doom-themes/doom-tokyo-night (night background, VSCode palette).
 ;;
-;; Palette (from colors/night.lua + storm.lua):
-;;   bg       #1a1b26   background
-;;   bg_dark  #16161e   panels
-;;   fg       #c0caf5   default text
-;;   comment  #565f89   comments
-;;   blue     #7aa2f7   functions
-;;   magenta  #bb9af7   identifiers/variables
-;;   cyan     #7dcfff   keywords, PreProc
-;;   blue1    #2ac3de   types
-;;   blue5    #89ddff   operators
-;;   green    #9ece6a   strings
-;;   orange   #ff9e64   constants, numbers, booleans
-;;   yellow   #e0af68   warnings
-;;   red      #f7768e   errors
+;; Key semantic groups (doom "face categories"):
+;;   builtin  red         keyword   magenta    operator  dark-cyan
+;;   function blue        methods   blue       type      base8
+;;   strings  dark-green  variables base8      numbers   orange
+;;   constants orange     comments  base1/5    region    base0
 
 ;;; Code:
 
 (require 'omarchy-themes)
 
 (defconst tokyo-night-palette-partial
-  '(;; Core surfaces
+  '(;; Core surfaces (doom night)
     (bg-main       "#1a1b26")  ; bg
-    (bg-dim        "#16161e")  ; bg_dark
-    (bg-alt        "#292e42")  ; bg_highlight
-    (bg-active     "#3b4261")  ; fg_gutter
-    (bg-inactive   "#0c0e14")  ; bg_dark1
-    (border        "#414868")  ; terminal_black
+    (bg-dim        "#13141c")  ; bg-alt
+    (bg-alt        "#242832")  ; base1
+    (bg-active     "#414868")  ; base0 (region)
+    (bg-inactive   "#13141c")
+    (border        "#51587a")  ; base1 variant
 
     ;; Foregrounds
-    (fg-main       "#c0caf5")  ; fg
-    (fg-dim        "#565f89")  ; comment
-    (fg-alt        "#a9b1d6")  ; fg_dark
+    (fg-main       "#a9b1d6")  ; fg
+    (fg-dim        "#565f89")  ; comments (base1-ish)
+    (fg-alt        "#c0caf5")  ; fg-alt / base8
     (cursor        "#c0caf5")
 
-    ;; Tokyo Night named slots
-    (tn-blue       "#7aa2f7")
-    (tn-blue1      "#2ac3de")
-    (tn-blue5      "#89ddff")
-    (tn-cyan       "#7dcfff")
-    (tn-magenta    "#bb9af7")
-    (tn-purple     "#9d7cd8")
-    (tn-red        "#f7768e")
-    (tn-orange     "#ff9e64")
-    (tn-yellow     "#e0af68")
-    (tn-green      "#9ece6a")
-    (tn-green1     "#73daca")
-    (tn-teal       "#1abc9c")
-    (tn-comment    "#565f89")
-    (tn-dark3      "#545c7e")
-    (tn-fg-dark    "#a9b1d6")
+    ;; Doom Tokyo Night named slots
+    (tn-base0       "#414868")  ; region / terminal black
+    (tn-base1       "#242832")
+    (tn-base5       "#9099c0")  ; brighter comments (optional)
+    (tn-base8       "#c0caf5")  ; variables, type, fg-alt
+    (tn-red         "#f7768e")  ; builtin, errors
+    (tn-orange      "#ff9e64")  ; constants, numbers
+    (tn-yellow      "#e0af68")  ; warnings, fn params
+    (tn-green       "#9ece6a")  ; strings (dark-green)
+    (tn-green-bright "#73daca") ; green accent
+    (tn-teal        "#2ac3de")  ; support fns
+    (tn-blue        "#7aa2f7")  ; functions
+    (tn-dark-cyan   "#7dcfff")  ; operators, properties
+    (tn-magenta     "#bb9af7")  ; keywords
+    (tn-violet      "#9aa5ce")
+    (tn-cyan        "#b4f9f8")
+    (tn-dark-blue   "#565f89")
+    (tn-brown       "#cfc9c2")
 
     ;; Modus primary color slots
     (red           "#f7768e")
     (red-warmer    "#ff9e64")
     (red-cooler    "#f7768e")
     (red-faint     "#f7768e")
-    (red-intense   "#db4b4b")
+    (red-intense   "#f7768e")
     (green         "#9ece6a")
-    (green-warmer  "#9ece6a")
+    (green-warmer  "#73daca")
     (green-cooler  "#73daca")
     (green-faint   "#9ece6a")
     (green-intense "#9ece6a")
@@ -82,17 +74,17 @@
     (yellow-intense "#e0af68")
     (blue          "#7aa2f7")
     (blue-warmer   "#bb9af7")
-    (blue-cooler   "#2ac3de")
+    (blue-cooler   "#7dcfff")
     (blue-faint    "#7aa2f7")
     (blue-intense  "#7aa2f7")
     (magenta       "#bb9af7")
-    (magenta-warmer "#ff007c")
-    (magenta-cooler "#9d7cd8")
+    (magenta-warmer "#f7768e")
+    (magenta-cooler "#9aa5ce")
     (magenta-faint "#bb9af7")
     (magenta-intense "#bb9af7")
     (cyan          "#7dcfff")
-    (cyan-warmer   "#73daca")
-    (cyan-cooler   "#2ac3de")
+    (cyan-warmer   "#2ac3de")
+    (cyan-cooler   "#b4f9f8")
     (cyan-faint    "#7dcfff")
     (cyan-intense  "#7dcfff")
 
@@ -117,41 +109,41 @@
     (bg-changed-intense  "#52528e")
     (fg-changed          "#7aa2f7")
     (fg-changed-intense  "#a6bdfb"))
-  "Tokyo Night (night) base colors, in Modus palette format.")
+  "Tokyo Night base colors, aligned with doom-themes' doom-tokyo-night.")
 
 (defconst tokyo-night-palette-mappings-partial
-  '(;; ---- Syntax (matches tokyonight.nvim base.lua) ----
-    (keyword         tn-cyan)         ; Keyword
-    (builtin         tn-cyan)         ; PreProc, Macro
-    (constant        tn-orange)       ; Constant, Number, Boolean, Float
-    (fnname          tn-blue)         ; Function
+  '(;; ---- Syntax (matches doom-tokyo-night face categories) ----
+    (keyword         tn-magenta)       ; keywords -> magenta
+    (builtin         tn-red)           ; builtin -> red
+    (constant        tn-orange)        ; constants + numbers -> orange
+    (fnname          tn-blue)          ; functions -> blue
     (fnname-call     tn-blue)
     (name            tn-blue)
-    (type            tn-blue1)        ; Type
-    (variable        tn-magenta)      ; Identifier
-    (variable-use    tn-magenta)
-    (identifier      tn-magenta)
-    (property        tn-green1)       ; @property -> green1 teal
-    (property-use    tn-green1)
-    (string          tn-green)        ; String
-    (docstring       tn-green)
-    (comment         tn-comment)      ; Comment — italic
-    (preprocessor    tn-cyan)
-    (operator        tn-blue5)        ; Operator
-    (punctuation     tn-fg-dark)      ; Delimiter
-    (rx-construct    tn-blue5)
-    (rx-backslash    tn-magenta)
+    (type            tn-base8)         ; type -> base8 (plain bright fg)
+    (variable        tn-base8)         ; variables -> base8
+    (variable-use    tn-base8)
+    (identifier      tn-base8)
+    (property        tn-dark-cyan)     ; @property -> dark-cyan (object props)
+    (property-use    tn-dark-cyan)
+    (string          tn-green)         ; strings -> dark-green
+    (docstring       tn-dark-blue)     ; doc-comments (lightened dark-blue)
+    (comment         tn-dark-blue)     ; comments -> base1/dark-blue
+    (preprocessor    tn-dark-cyan)     ; import/export -> dark-cyan
+    (operator        tn-dark-cyan)     ; operators -> dark-cyan
+    (punctuation     fg-main)          ; fg
+    (rx-construct    tn-magenta)       ; regex symbols -> magenta
+    (rx-backslash    tn-cyan)          ; regex literals -> cyan
 
     ;; ---- Status / diagnostics ----
     (err             tn-red)
     (warning         tn-yellow)
     (info            tn-blue)
-    (note            tn-cyan)
-    (success         tn-green)
+    (note            tn-dark-cyan)
+    (success         tn-green-bright)
 
     ;; ---- Mode line ----
     (bg-mode-line-active       bg-dim)
-    (fg-mode-line-active       fg-main)
+    (fg-mode-line-active       fg-alt)
     (border-mode-line-active   bg-active)
     (bg-mode-line-inactive     bg-main)
     (fg-mode-line-inactive     fg-dim)
@@ -161,14 +153,14 @@
     (modeline-info             tn-blue)
 
     ;; ---- Line numbers ----
-    (fg-line-number-inactive   bg-active)
-    (fg-line-number-active     tn-orange)
+    (fg-line-number-inactive   tn-dark-blue)
+    (fg-line-number-active     tn-base8)
     (bg-line-number-inactive   bg-main)
     (bg-line-number-active     bg-alt)
 
     ;; ---- Region / highlight / search ----
-    (bg-region                 bg-alt)
-    (fg-region                 fg-main)
+    (bg-region                 tn-base0)    ; region -> base0
+    (fg-region                 fg-alt)
     (bg-hl-line                bg-alt)
     (bg-paren-match            bg-active)
     (fg-paren-match            tn-orange)
@@ -182,21 +174,21 @@
 
     ;; ---- Links / prompts ----
     (link                      tn-blue)
-    (link-symbolic             tn-cyan)
+    (link-symbolic             tn-dark-cyan)
     (cursor                    fg-main)
     (prompt                    tn-magenta)
 
-    ;; ---- Headings ----
-    (fg-heading-0              tn-magenta)
-    (fg-heading-1              tn-blue)
-    (fg-heading-2              tn-cyan)
-    (fg-heading-3              tn-green)
-    (fg-heading-4              tn-yellow)
-    (fg-heading-5              tn-magenta)
-    (fg-heading-6              tn-orange)
-    (fg-heading-7              tn-red)
-    (fg-heading-8              tn-teal))
-  "Semantic slot mappings for Tokyo Night.")
+    ;; ---- Headings (doom uses dark-cyan for markdown-header) ----
+    (fg-heading-0              tn-dark-cyan)
+    (fg-heading-1              tn-dark-cyan)
+    (fg-heading-2              tn-blue)
+    (fg-heading-3              tn-magenta)
+    (fg-heading-4              tn-green)
+    (fg-heading-5              tn-orange)
+    (fg-heading-6              tn-yellow)
+    (fg-heading-7              tn-teal)
+    (fg-heading-8              tn-red))
+  "Semantic slot mappings for Tokyo Night (doom-themes alignment).")
 
 (defconst tokyo-night-palette
   (modus-themes-generate-palette
@@ -209,13 +201,15 @@
 (defcustom tokyo-night-palette-overrides nil
   "User-level palette overrides for the Tokyo Night theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
-;; tokyonight.nvim applies italic only to comments by default.
+;; doom-tokyo-night does not italicize by default.  We italicize
+;; comments for parity with the rest of the omarchy pack; variables
+;; and types stay upright (type=base8, variable=base8 in doom).
 (defvar tokyo-night-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,tn-magenta :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,tn-magenta :slant normal)))
-    `(help-argument-name           ((,c :foreground ,tn-magenta :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,tn-base8 :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,tn-base8 :slant normal)))
+    `(help-argument-name           ((,c :foreground ,tn-yellow :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar tokyo-night-custom-variables nil

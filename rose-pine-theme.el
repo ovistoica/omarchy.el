@@ -211,7 +211,7 @@ specification so both editors render the same code near-identically.")
   "User-level palette overrides for the Rose Pine theme.
 Same format as `modus-themes-common-palette-overrides'."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Extra faces: Rose Pine italicizes comments/docstrings but NOT
 ;; variables.  Modus's `modus-themes-italic-constructs' makes

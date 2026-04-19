@@ -152,9 +152,9 @@
     (bg-line-number-active     bg-alt)
 
     ;; ---- Region / highlight / search ----
-    (bg-region                 bg-alt)
+    (bg-region                 bg-active)  ; dimmed4 — brighter than hl-line
     (fg-region                 fg-main)
-    (bg-hl-line                bg-alt)
+    (bg-hl-line                bg-alt)      ; dimmed5 — subtle cursor line
     (bg-paren-match            bg-active)
     (fg-paren-match            rist-blue)
     (bg-search-current         rist-yellow)
@@ -194,7 +194,7 @@
 (defcustom ristretto-palette-overrides nil
   "User-level palette overrides for the Ristretto theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Ristretto: keyword italic + comment italic.  Variables plain.
 (defvar ristretto-custom-faces

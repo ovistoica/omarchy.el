@@ -22,6 +22,14 @@
 
 (require 'modus-themes)
 
+(defgroup omarchy-themes nil
+  "Modus-derived themes bundled with omarchy.el.
+Each bundled theme provides a `<theme>-palette-overrides' defcustom
+in this group, in the same format as
+`modus-themes-common-palette-overrides'."
+  :group 'modus-themes
+  :prefix "omarchy-themes-")
+
 ;;;; Add themes from this package to the `custom-theme-load-path'
 
 ;;;###autoload

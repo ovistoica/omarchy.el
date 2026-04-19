@@ -220,7 +220,7 @@ Mirrors the catppuccin/nvim syntax group specification.")
 (defcustom catppuccin-mocha-palette-overrides nil
   "User-level palette overrides for the Catppuccin Mocha theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Catppuccin italicizes comments but not variables.  Override
 ;; variable faces back to upright.

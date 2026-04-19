@@ -195,7 +195,7 @@
 (defcustom ethereal-palette-overrides nil
   "User-level palette overrides for the Ethereal theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Ethereal italicizes comments.  Variables stay upright.
 (defvar ethereal-custom-faces

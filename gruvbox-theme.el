@@ -194,7 +194,7 @@
 (defcustom gruvbox-palette-overrides nil
   "User-level palette overrides for the Gruvbox theme."
   :type '(repeat (list symbol (choice symbol string)))
-  :group 'modus-themes)
+  :group 'omarchy-themes)
 
 ;; Gruvbox italicizes comments and operators by default.
 (defvar gruvbox-custom-faces
