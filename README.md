@@ -19,23 +19,45 @@ On non-Omarchy systems the package loads cleanly and degrades gracefully — int
 
 ## What's in the box
 
+The package lives at the repo root; the 13 bundled themes are grouped under `themes/`:
+
+```
+omarchy.el/
+├── omarchy.el            — core package
+├── omarchy-themes.el     — shared theme library
+└── themes/
+    ├── rose-pine-theme.el
+    ├── osaka-jade-theme.el
+    ├── flexoki-light-theme.el
+    ├── catppuccin-mocha-theme.el
+    ├── catppuccin-latte-theme.el
+    ├── tokyo-night-theme.el
+    ├── gruvbox-theme.el
+    ├── kanagawa-theme.el
+    ├── everforest-theme.el
+    ├── nord-theme.el
+    ├── ristretto-theme.el
+    ├── matte-black-theme.el
+    └── ethereal-theme.el
+```
+
 | File | Purpose |
 |---|---|
 | `omarchy.el` | Core package: CLI integration, theme/font pickers, hook installer, desktop toggles, `omarchy-init` |
-| `omarchy-themes.el` | Shared library for the bundled themes; registers the package directory with `custom-theme-load-path` and defines the `omarchy-themes` customize group |
-| `rose-pine-theme.el` | Rose Pine Dawn, derived from Modus Operandi |
-| `osaka-jade-theme.el` | Osaka Jade, derived from Modus Vivendi (mirrors `bamboo.nvim` *vulgaris*) |
-| `flexoki-light-theme.el` | Flexoki Light, derived from Modus Operandi Tinted |
-| `catppuccin-mocha-theme.el` | Catppuccin Mocha (`catppuccin/nvim`) |
-| `catppuccin-latte-theme.el` | Catppuccin Latte (`catppuccin/nvim` latte flavor) |
-| `tokyo-night-theme.el` | Tokyo Night (doom-tokyo-night alignment, night palette) |
-| `gruvbox-theme.el` | Gruvbox dark medium (`ellisonleao/gruvbox.nvim`) |
-| `kanagawa-theme.el` | Kanagawa Wave (`rebelot/kanagawa.nvim`) |
-| `everforest-theme.el` | Everforest medium dark (`theorytoe/everforest-emacs` alignment) |
-| `nord-theme.el` | Nord (doom-nord alignment) |
-| `ristretto-theme.el` | Monokai Pro Ristretto (`gthelding/monokai-pro.nvim`) |
-| `matte-black-theme.el` | Matte Black (`tahayvr/matteblack.nvim`) |
-| `ethereal-theme.el` | Ethereal (`bjarneo/ethereal.nvim`) |
+| `omarchy-themes.el` | Shared library for the bundled themes; registers `themes/` with `custom-theme-load-path` and defines the `omarchy-themes` customize group |
+| `themes/rose-pine-theme.el` | Rose Pine Dawn, derived from Modus Operandi |
+| `themes/osaka-jade-theme.el` | Osaka Jade, derived from Modus Vivendi (mirrors `bamboo.nvim` *vulgaris*) |
+| `themes/flexoki-light-theme.el` | Flexoki Light, derived from Modus Operandi Tinted |
+| `themes/catppuccin-mocha-theme.el` | Catppuccin Mocha (`catppuccin/nvim`) |
+| `themes/catppuccin-latte-theme.el` | Catppuccin Latte (`catppuccin/nvim` latte flavor) |
+| `themes/tokyo-night-theme.el` | Tokyo Night (doom-tokyo-night alignment, night palette) |
+| `themes/gruvbox-theme.el` | Gruvbox dark medium (`ellisonleao/gruvbox.nvim`) |
+| `themes/kanagawa-theme.el` | Kanagawa Wave (`rebelot/kanagawa.nvim`) |
+| `themes/everforest-theme.el` | Everforest medium dark (`theorytoe/everforest-emacs` alignment) |
+| `themes/nord-theme.el` | Nord (doom-nord alignment) |
+| `themes/ristretto-theme.el` | Monokai Pro Ristretto (`gthelding/monokai-pro.nvim`) |
+| `themes/matte-black-theme.el` | Matte Black (`tahayvr/matteblack.nvim`) |
+| `themes/ethereal-theme.el` | Ethereal (`bjarneo/ethereal.nvim`) |
 
 All bundled themes use the public `modus-themes-theme` machinery, so you get full coverage of the Modus face catalog (Magit, Org, Eglot, tree-sitter, Corfu, Vertico, etc.) without hand-rolling hundreds of `custom-theme-set-faces` entries. Each one's syntax slot mapping (keyword, function, variable, string, comment, type, …) is taken from the upstream Neovim plugin that Omarchy ships, so code renders near-identically across the two editors.
 

@@ -11,9 +11,10 @@
 ;;; Commentary:
 ;;
 ;; Shared library for the Omarchy theme collection.  Individual themes
-;; (`rose-pine', `osaka-jade', `flexoki-light', `default-black') require
-;; this file so they share a single `custom-theme-load-path' entry and
-;; `omarchy-themes' family symbol for `modus-themes-theme'.
+;; live in the `themes/' subdirectory and all `(require 'omarchy-themes)'
+;; so they share a single `custom-theme-load-path' entry (the themes/
+;; subdir, registered by the autoload below) and the `omarchy-themes'
+;; family symbol passed to `modus-themes-theme'.
 ;;
 ;; See Info node `(modus-themes) Complete example of a package that is
 ;; derived from Modus'.
@@ -34,8 +35,10 @@ in this group, in the same format as
 
 ;;;###autoload
 (when load-file-name
-  (let ((dir (file-name-directory load-file-name)))
-    (add-to-list 'custom-theme-load-path dir)))
+  (let ((themes-dir (expand-file-name
+                     "themes/"
+                     (file-name-directory load-file-name))))
+    (add-to-list 'custom-theme-load-path themes-dir)))
 
 (provide 'omarchy-themes)
 ;;; omarchy-themes.el ends here
