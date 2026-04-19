@@ -5,7 +5,7 @@
 ;; Author: Ovidiu Stoica <ovidiu.stoica1094@gmail.com>
 ;; URL: https://github.com/ovistoica/omarchy.el
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "29.1") (modus-themes "4.4"))
+;; Package-Requires: ((emacs "29.1") (modus-themes "5.2"))
 ;; Keywords: faces, theme
 
 ;;; Commentary:

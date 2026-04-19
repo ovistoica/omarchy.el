@@ -72,7 +72,7 @@ All bundled themes use the public `modus-themes-theme` machinery, so you get ful
   (unless (server-running-p) (server-start))
   ```
   `M-x omarchy-install-hooks` will emit a warning if the server isn't running when you try to install the hooks.
-- [`modus-themes`](https://protesilaos.com/emacs/modus-themes) 4.4 or newer (for the bundled themes only — `omarchy.el` itself has no runtime dependencies)
+- [`modus-themes`](https://protesilaos.com/emacs/modus-themes) **5.2 or newer** (for the bundled themes only — `omarchy.el` itself has no runtime dependencies). The bundled themes depend on `modus-themes-generate-palette` and the 9-argument form of `modus-themes-theme`, both introduced in the 5.x series. Emacs 30.2 ships Modus 4.4 built-in, which is too old — install the newer release from [GNU ELPA](https://elpa.gnu.org/packages/modus-themes.html) (`M-x package-install RET modus-themes RET`).
 - Omarchy on the host system, if you want the desktop sync (otherwise it's just a theme pack + small convenience library; no server needed in that case)
 
 ### MELPA
