@@ -82,6 +82,12 @@ All bundled themes use the public `modus-themes-theme` machinery, so you get ful
   `M-x omarchy-install-hooks` will emit a warning if the server isn't running when you try to install the hooks.
 - [`modus-themes`](https://protesilaos.com/emacs/modus-themes) **5.2 or newer** (for the bundled themes only — `omarchy.el` itself has no runtime dependencies). The bundled themes depend on `modus-themes-generate-palette` and the 9-argument form of `modus-themes-theme`, both introduced in the 5.x series. Emacs 30.2 ships Modus 4.4 built-in, which is too old — install the newer release from [GNU ELPA](https://elpa.gnu.org/packages/modus-themes.html) (`M-x package-install RET modus-themes RET`).
 - Omarchy on the host system, if you want the desktop sync (otherwise it's just a theme pack + small convenience library; no server needed in that case)
+- **Omarchy 4 (Quattro) or newer.** Quattro renamed several CLIs this package drives — `omarchy-toggle-waybar` → `omarchy-toggle-bar`, `omarchy-cmd-screenshot` → `omarchy-capture-screenshot`, `omarchy-lock-screen` → `omarchy-system-lock` — so the desktop toggles will not work on Omarchy 3. If you are still on 3.x, pin the last release that targets it:
+  ```elisp
+  ;; straight/use-package
+  (use-package omarchy :straight (omarchy :host github :repo "ovistoica/omarchy.el" :tag "v0.1.0"))
+  ```
+  See [CHANGELOG.md](CHANGELOG.md) for the full 0.2.0 migration notes.
 
 ### MELPA
 
@@ -151,13 +157,15 @@ Then install the shell hooks so Omarchy notifies Emacs of future changes:
 M-x omarchy-install-hooks
 ```
 
-That's it. Change the theme from `walker`, the Omarchy menu, or `omarchy-theme-set` in any terminal, and Emacs repaints.
+That's it. Change the theme from the Omarchy menu, the launcher, or `omarchy-theme-set` in any terminal, and Emacs repaints.
 
 ## Themes
 
 Every bundled theme is designed to render source code as identically as possible to the Neovim theme Omarchy ships for the same name, so your editor looks like every other surface in the Omarchy UI.
 
 For each theme below, the syntax slot mapping (keyword, function, variable, string, comment, type, constant, operator, property, …) was lifted directly from the upstream Neovim plugin's palette and highlight-group files (or, for Tokyo Night / Nord / Everforest, from the corresponding doom-themes Emacs port, which is the common reference point for "Modus-derived, upstream-faithful" feel).
+
+The themes added in 0.2.0 for Omarchy 4 have no separate upstream plugin — they are Omarchy's own. Those are derived from the `colors.toml` and `neovim.lua` that Omarchy ships in `/usr/share/omarchy/themes/<name>/`, which is the same source the rest of the desktop renders from.
 
 ### Light themes
 
@@ -181,6 +189,13 @@ For each theme below, the syntax slot mapping (keyword, function, variable, stri
 | Ristretto | `ristretto` | `gthelding/monokai-pro.nvim` ristretto filter | keyword red italic · function green · string yellow · variable white |
 | Matte Black | `matte-black` | `tahayvr/matteblack.nvim` | keyword green · function crimson · string fg-neutral · variable amber |
 | Ethereal | `ethereal` | `bjarneo/ethereal.nvim` | keyword purple · function magenta2 · string green · variable magenta2 |
+| Hackerman | `hackerman` | Omarchy 4 `neovim.lua` | keyword accent · function blue · string green · variable magenta |
+| Last Horizon | `last-horizon` | Omarchy 4 `neovim.lua` | keyword rose · function sky · string teal · variable fg-alt |
+| Lumon | `lumon` | Omarchy 4 `neovim.lua` | keyword accent · function blue · string steel · variable fg-alt |
+| Miasma | `miasma` | Omarchy 4 `neovim.lua` | keyword olive · function gold · string green · variable fg-main |
+| Retro 82 | `retro-82` | Omarchy 4 `neovim.lua` | keyword red · function orange · string mint · variable fg-main |
+| Solitude | `solitude` | Omarchy 4 `neovim.lua` | keyword ember · function pearl · string mist · variable fg-main |
+| Vantablack | `vantablack` | Omarchy 4 `neovim.lua` | keyword yellow · function silver · string green · variable fg-main |
 
 Out of the box the themes follow Modus's own conservative defaults: no italic, no bold weight on syntax faces. That's a deliberate choice — readability first, Modus's research on legibility second. You can enable italics and/or bold globally via standard Modus variables; see [Customizing a theme](#customizing-a-theme) below.
 
@@ -244,12 +259,12 @@ For deeper customization — headings with different weights per level, org-bloc
 | Command | Runs |
 |---|---|
 | `M-x omarchy-toggle-nightlight` | `omarchy-toggle-nightlight` |
-| `M-x omarchy-toggle-waybar` | `omarchy-toggle-waybar` |
-| `M-x omarchy-screenshot` | `omarchy-cmd-screenshot` |
-| `M-x omarchy-lock-screen` | `omarchy-lock-screen` |
+| `M-x omarchy-toggle-bar` | `omarchy-toggle-bar` |
+| `M-x omarchy-screenshot` | `omarchy-capture-screenshot` |
+| `M-x omarchy-lock-screen` | `omarchy-system-lock` |
 | `M-x omarchy-terminal-at-cwd` | `omarchy-cmd-terminal-cwd` (with `default-directory` set to the buffer's directory) |
 
-All toggles are launched detached via `setsid`, so processes like waybar survive after the wrapper script exits.
+All toggles are launched detached via `setsid`, so processes the wrapper script backgrounds survive after it exits.
 
 ### Apply-only (called by shell hooks, but also usable directly)
 
@@ -262,7 +277,7 @@ All toggles are launched detached via `setsid`, so processes like waybar survive
 
 | Command | Behavior |
 |---|---|
-| `M-x omarchy-install-hooks` | Write executable `theme-set` and `font-set` scripts into `omarchy-hooks-directory` (default `~/.config/omarchy/hooks/`). Overwrites existing files. |
+| `M-x omarchy-install-hooks` | Write executable drop-ins into `theme-set.d/` and `font-set.d/` under `omarchy-hooks-directory` (default `~/.config/omarchy/hooks/`), each named `omarchy-hook-dropin-name` (default `50-emacs`). Leaves any hooks you maintain yourself untouched. |
 
 ## Customization
 
@@ -315,9 +330,9 @@ If you prefer a third-party Emacs theme over the bundled one, just override the 
 
 ## Shell hook integration
 
-Omarchy invokes scripts in `~/.config/omarchy/hooks/` whenever the system theme or font changes. `omarchy-install-hooks` writes two of them:
+Omarchy invokes scripts in `~/.config/omarchy/hooks/` whenever the system theme or font changes. For a hook named `theme-set` it runs both the plain `theme-set` file and every non-`.sample` file in `theme-set.d/`. `omarchy-install-hooks` writes into the `.d/` directories, so it composes with any hook you already maintain instead of replacing it:
 
-**`~/.config/omarchy/hooks/theme-set`**:
+**`~/.config/omarchy/hooks/theme-set.d/50-emacs`**:
 
 ```bash
 #!/usr/bin/env bash
@@ -328,11 +343,11 @@ if command -v emacsclient >/dev/null 2>&1 && pgrep -x emacs >/dev/null; then
 fi
 ```
 
-**`~/.config/omarchy/hooks/font-set`** is identical but calls `omarchy-apply-font`.
+**`~/.config/omarchy/hooks/font-set.d/50-emacs`** is identical but calls `omarchy-apply-font`.
 
 The `pgrep` guard avoids starting a new Emacs if you don't have one running, so the hooks are safe to leave installed even when you're using a different editor.
 
-If you already maintain hooks by hand, `omarchy-install-hooks` **overwrites** them without warning. Edit `omarchy--hook-script-template` or skip the installer and write them yourself.
+The numeric prefix decides when Emacs is notified relative to other drop-ins; set `omarchy-hook-dropin-name` to reorder. `omarchy-install-hooks` overwrites only its own drop-in — your `theme-set`/`font-set` files and any other drop-ins are left alone. To customize the generated script, edit `omarchy--hook-script-template` or skip the installer and write your own drop-in.
 
 ## How the sync works
 
@@ -342,7 +357,7 @@ If you already maintain hooks by hand, `omarchy-install-hooks` **overwrites** th
  omarchy-theme-set "Tokyo Night"
          │
          ▼
- ~/.config/omarchy/hooks/theme-set "Tokyo Night"
+ ~/.config/omarchy/hooks/theme-set.d/50-emacs "Tokyo Night"
          │
          ▼
  emacsclient -e '(omarchy-apply-theme "Tokyo Night")'

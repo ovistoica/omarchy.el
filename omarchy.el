@@ -4,7 +4,7 @@
 
 ;; Author: Ovidiu Stoica <ovidiu.stoica1094@gmail.com>
 ;; URL: https://github.com/ovistoica/omarchy.el
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: faces, tools, convenience
 
@@ -13,8 +13,11 @@
 ;; Keeps Emacs' theme and default font synchronized with Omarchy Linux
 ;; (https://omarchy.org) via the `omarchy-*' CLIs.  Provides interactive
 ;; pickers over the system's theme/font lists and thin wrappers around
-;; common Omarchy toggles (night light, waybar, lock screen, screenshot,
+;; common Omarchy toggles (night light, bar, lock screen, screenshot,
 ;; terminal at cwd).
+;;
+;; Requires Omarchy 4 (Quattro) or newer.  Omarchy 3 renamed or removed
+;; several of the CLIs used here; pin v0.1.0 if you are still on 3.x.
 ;;
 ;; Usage:
 ;;
@@ -26,7 +29,7 @@
 ;; no-op with a message, and `omarchy-init' applies `omarchy-default-theme'
 ;; as a fallback.
 ;;
-;; Companion shell hooks in ~/.config/omarchy/hooks/{theme-set,font-set}
+;; Companion shell hooks in ~/.config/omarchy/hooks/{theme-set,font-set}.d/
 ;; call back into Emacs via:
 ;;
 ;;   emacsclient -e "(omarchy-apply-theme \"$THEME_NAME\")"
@@ -59,13 +62,22 @@ Set this to a theme that is guaranteed to be loadable in your config."
     ("Everforest"       . everforest)
     ("Flexoki Light"    . flexoki-light)
     ("Gruvbox"          . gruvbox)
+    ("Hackerman"        . hackerman)
     ("Kanagawa"         . kanagawa)
+    ("Last Horizon"     . last-horizon)
+    ("Lumon"            . lumon)
+    ("Lupine"           . lupine)
     ("Matte Black"      . matte-black)
+    ("Miasma"           . miasma)
     ("Nord"             . nord)
     ("Osaka Jade"       . osaka-jade)
+    ("Retro 82"         . retro-82)
     ("Ristretto"        . ristretto)
     ("Rose Pine"        . rose-pine)
-    ("Tokyo Night"      . tokyo-night))
+    ("Solitude"         . solitude)
+    ("Tokyo Night"      . tokyo-night)
+    ("Vantablack"       . vantablack)
+    ("White"            . white))
   "Map an Omarchy theme name to an Emacs theme symbol or a thunk.
 Keys are the exact display names reported by `omarchy-theme-list'.
 Values are either a theme symbol loaded via `load-theme', or a thunk
@@ -109,7 +121,7 @@ Returns nil if PROGRAM is not on PATH."
 (defun omarchy--run-async (program &rest args)
   "Run PROGRAM with ARGS fully detached from Emacs.
 Uses a `setsid'-wrapped shell so child processes the script
-backgrounds (e.g. waybar) survive after the script exits."
+backgrounds (e.g. the Omarchy shell) survive after the script exits."
   (if (executable-find program)
       (let ((cmd (mapconcat #'shell-quote-argument (cons program args) " ")))
         (call-process "setsid" nil 0 nil "sh" "-c"
@@ -235,20 +247,21 @@ On non-Omarchy systems, apply directly to Emacs."
   (interactive)
   (omarchy--run-async "omarchy-toggle-nightlight"))
 
-(defun omarchy-toggle-waybar ()
-  "Toggle the Omarchy Waybar status bar."
+(defun omarchy-toggle-bar ()
+  "Toggle visibility of the Omarchy shell bar.
+Does not kill the shell itself."
   (interactive)
-  (omarchy--run-async "omarchy-toggle-waybar"))
+  (omarchy--run-async "omarchy-toggle-bar"))
 
 (defun omarchy-screenshot ()
   "Invoke the Omarchy screenshot command."
   (interactive)
-  (omarchy--run-async "omarchy-cmd-screenshot"))
+  (omarchy--run-async "omarchy-capture-screenshot"))
 
 (defun omarchy-lock-screen ()
   "Lock the screen via Omarchy."
   (interactive)
-  (omarchy--run-async "omarchy-lock-screen"))
+  (omarchy--run-async "omarchy-system-lock"))
 
 (defun omarchy-terminal-at-cwd ()
   "Open a terminal in the current buffer's directory via Omarchy."
@@ -264,6 +277,14 @@ On non-Omarchy systems, apply directly to Emacs."
   (expand-file-name "omarchy/hooks" (or (getenv "XDG_CONFIG_HOME") "~/.config"))
   "Directory where Omarchy looks for `theme-set' and `font-set' hooks."
   :type 'directory)
+
+(defcustom omarchy-hook-dropin-name "50-emacs"
+  "Filename for the drop-in scripts written by `omarchy-install-hooks'.
+Installed into the `theme-set.d' and `font-set.d' directories beneath
+`omarchy-hooks-directory'.  Omarchy runs drop-ins in shell glob order,
+so the numeric prefix decides when Emacs is notified relative to other
+drop-ins.  Names ending in `.sample' are ignored by Omarchy."
+  :type 'string)
 
 (defconst omarchy--hook-script-template
   "#!/usr/bin/env bash
@@ -282,13 +303,20 @@ fi
 The three %s placeholders receive (1) a human-readable hook name,
 (2) the argument description, and (3) the Emacs function to call.")
 
-(defun omarchy--write-hook (filename description arg-name fn)
-  "Write FILENAME in `omarchy-hooks-directory' calling FN via emacsclient.
+(defun omarchy--write-hook (hook-name description arg-name fn)
+  "Write a drop-in for HOOK-NAME that calls FN via emacsclient.
+The script is created as `omarchy-hook-dropin-name' inside the
+HOOK-NAME.d directory beneath `omarchy-hooks-directory'.  Omarchy runs
+every non-`.sample' file in that directory, so installing here leaves
+any user-managed HOOK-NAME file untouched.
+
 DESCRIPTION is the first comment line; ARG-NAME labels the argument.
 Creates the directory if needed and makes the script executable.
 Returns the full path written."
-  (let ((path (expand-file-name filename omarchy-hooks-directory)))
-    (make-directory omarchy-hooks-directory :parents)
+  (let* ((dropin-dir (expand-file-name (concat hook-name ".d")
+                                       omarchy-hooks-directory))
+         (path (expand-file-name omarchy-hook-dropin-name dropin-dir)))
+    (make-directory dropin-dir :parents)
     (with-temp-file path
       (insert (format omarchy--hook-script-template description arg-name fn)))
     (set-file-modes path #o755)
@@ -297,12 +325,15 @@ Returns the full path written."
 ;;;###autoload
 (defun omarchy-install-hooks ()
   "Install shell hook scripts that forward Omarchy theme/font changes to Emacs.
-Writes two executable files in `omarchy-hooks-directory':
+Writes two executable drop-ins under `omarchy-hooks-directory', each
+named `omarchy-hook-dropin-name':
 
-  theme-set   calls `omarchy-apply-theme' with the new theme name.
-  font-set    calls `omarchy-apply-font'  with the new font name.
+  theme-set.d/  calls `omarchy-apply-theme' with the new theme name.
+  font-set.d/   calls `omarchy-apply-font'  with the new font name.
 
-Overwrites existing files.  Returns the list of paths written.
+Omarchy runs every non-`.sample' file in these directories in addition
+to any plain `theme-set'/`font-set' script, so your own hooks are left
+alone.  Overwrites only our own drop-ins.  Returns the paths written.
 
 Emits a warning if the Emacs server is not running — the scripts depend
 on `emacsclient' reaching a live server.  Start one with \\[server-start]
