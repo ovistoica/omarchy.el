@@ -86,7 +86,7 @@
     (bg-added-faint      "#2d341e")
     (bg-added-refine     "#525f39")
     (bg-added-intense    "#6b7c4a")
-    (fg-added            "#adda78")
+    (fg-added            "#bbe090")
     (fg-added-intense    "#c6e89a")
 
     (bg-removed          "#4e2a33")
