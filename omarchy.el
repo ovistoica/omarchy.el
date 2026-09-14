@@ -37,6 +37,7 @@
 
 ;;; Code:
 
+(require 'seq)
 (require 'subr-x)
 
 (defgroup omarchy nil
@@ -54,6 +55,19 @@ Set this to a theme that is guaranteed to be loadable in your config."
 (defcustom omarchy-default-font "Iosevka Nerd Font Mono"
   "Fallback font family name when Omarchy reports no current font."
   :type 'string)
+
+(defcustom omarchy-font-height nil
+  "Height of the `default' face applied together with the Omarchy font.
+An integer in units of 1/10 point (120 means 12pt).  When nil, changing
+the font family leaves the size already in effect untouched."
+  :type '(choice (const :tag "Keep current height" nil) integer))
+
+(defcustom omarchy-fallback-font-height 110
+  "Height (in 1/10 pt) used when the current `default' face height is unusable.
+Only consulted when `omarchy-font-height' is nil and the height in effect is
+below `omarchy--min-sane-font-height'.  11pt matches the size Omarchy's own
+terminal configs use."
+  :type 'integer)
 
 (defcustom omarchy-theme-map
   '(("Catppuccin"       . catppuccin-mocha)
@@ -166,6 +180,78 @@ once.  Do not call `omarchy-apply-theme' from here."
   (interactive (list (completing-read "Omarchy font: " (omarchy-list-fonts) nil t)))
   (omarchy--run-async "omarchy-font-set" name))
 
+;;; Font helpers
+
+(defconst omarchy--min-sane-font-height 20
+  "Smallest `default' face `:height' (in 1/10 pt) treated as usable.
+Anything below 2pt is unreadable and almost certainly comes from a
+customization spec copied off a non-graphical frame.")
+
+(defvar omarchy--warned-unusable-height nil
+  "Non-nil once `omarchy--warn-unusable-height' has fired this session.")
+
+(defvar omarchy--pending-font nil
+  "Cons (FONT . HEIGHT) waiting for a graphical frame to be applied to.
+Set by `omarchy-apply-font' when no graphical frame exists and consumed
+by `omarchy--apply-pending-font'.")
+
+(defun omarchy--graphic-frame ()
+  "Return a graphical frame, preferring the selected one, or nil."
+  (if (display-graphic-p)
+      (selected-frame)
+    (seq-find #'display-graphic-p (frame-list))))
+
+(defun omarchy--sane-height-p (height)
+  "Return non-nil if HEIGHT is a usable `default' face `:height'."
+  (and (integerp height) (>= height omarchy--min-sane-font-height)))
+
+(defun omarchy--warn-unusable-height (height)
+  "Warn once per session that the `default' face height HEIGHT is unusable."
+  (unless omarchy--warned-unusable-height
+    (setq omarchy--warned-unusable-height t)
+    (display-warning
+     'omarchy
+     (format "The `default' face height is %S, which is unusable; using %d instead.
+This usually means `set-frame-font' was called with a FRAMES argument
+before any graphical frame existed (for example from init.el under
+`emacs --daemon'), which records a customization copied from the hidden
+terminal frame.  Set the font with `set-face-attribute' or
+`default-frame-alist' instead, or customize `omarchy-font-height' or
+`omarchy-fallback-font-height'."
+             height omarchy-fallback-font-height)
+     :warning)))
+
+(defun omarchy--resolve-font-height (frame &optional height)
+  "Return the `default' face height to apply on FRAME.
+HEIGHT wins when non-nil, then `omarchy-font-height', then the height
+currently in effect on FRAME when it is usable.  Otherwise warn and
+return `omarchy-fallback-font-height'.  Always returns an integer."
+  (or height
+      omarchy-font-height
+      (let ((current (face-attribute 'default :height frame)))
+        (if (omarchy--sane-height-p current)
+            current
+          (omarchy--warn-unusable-height current)
+          omarchy-fallback-font-height))))
+
+(defun omarchy--apply-pending-font ()
+  "Apply `omarchy--pending-font' once a graphical frame is available.
+Meant for `server-after-make-frame-hook'; removes itself after running."
+  (when (and omarchy--pending-font (display-graphic-p))
+    (remove-hook 'server-after-make-frame-hook #'omarchy--apply-pending-font)
+    (let ((pending omarchy--pending-font))
+      (setq omarchy--pending-font nil)
+      (omarchy-apply-font (car pending) (cdr pending)))))
+
+(defun omarchy--repair-default-height ()
+  "Restore a usable `default' face height if a theme load clobbered it.
+`load-theme' re-applies the `default' face's customization spec, which
+may carry an unusable height (see `omarchy--warn-unusable-height')."
+  (when-let* ((frame (omarchy--graphic-frame)))
+    (unless (omarchy--sane-height-p (face-attribute 'default :height frame))
+      (set-face-attribute 'default nil
+                          :height (omarchy--resolve-font-height frame)))))
+
 ;;; Apply to Emacs only (entry points for the shell hooks)
 
 (defun omarchy--raw-load-theme (theme)
@@ -185,7 +271,9 @@ with `-' ↔ ` ' equivalence.  Return the mapping value, or nil."
   "Apply THEME-SPEC to Emacs.
 THEME-SPEC may be a string (looked up in `omarchy-theme-map'; if absent,
 treated as a bare theme name and `intern'ed), a symbol (loaded
-directly), or a function (called for side effects)."
+directly), or a function (called for side effects).  Afterwards restore
+a usable `default' face height, since loading a theme can re-apply an
+unusable one (see `omarchy--repair-default-height')."
   (interactive "sTheme: ")
   (let ((handler (if (stringp theme-spec)
                      (or (omarchy--lookup-theme theme-spec)
@@ -200,20 +288,34 @@ directly), or a function (called for side effects)."
        (message "omarchy: failed to load theme %S: %s"
                 theme-spec (error-message-string err))
        (when omarchy-default-theme
-         (omarchy--raw-load-theme omarchy-default-theme))))))
+         (omarchy--raw-load-theme omarchy-default-theme))))
+    (omarchy--repair-default-height)))
 
 (defun omarchy-apply-font (font &optional height)
   "Set the Emacs default face family to FONT at HEIGHT.
-When HEIGHT is omitted, the face's current `:height' is preserved so
-that callers such as Fontaine that manage size independently are not
-clobbered.  No-op when FONT is not in `font-family-list' (e.g. when
-called before a display connection exists)."
+HEIGHT defaults to `omarchy-font-height'; when both are nil the height
+already in effect on a graphical frame is preserved, so changing the
+family never changes the size.  The size is never taken from a
+non-graphical frame (such as the daemon's hidden
+terminal frame): when no graphical frame exists the change is deferred
+until the first client frame attaches.  No-op when FONT is not in
+`font-family-list'."
   (interactive "sFont: ")
-  (when (and font (member font (font-family-list)))
-    (set-face-attribute 'default nil
-                        :font font
-                        :height (or height (face-attribute 'default :height)))
-    (message "Font set to %s" font)))
+  (let ((frame (omarchy--graphic-frame)))
+    (cond
+     ((null frame)
+      (setq omarchy--pending-font (cons font height))
+      (add-hook 'server-after-make-frame-hook #'omarchy--apply-pending-font))
+     ((not (and font (member font (font-family-list frame)))) nil)
+     (t
+      ;; For the new-frame-defaults target `set-face-attribute' loads the
+      ;; font on the *selected* frame and silently skips it when that
+      ;; frame has no window system, so select the graphical one.
+      (with-selected-frame frame
+        (set-face-attribute 'default nil
+                            :font font
+                            :height (omarchy--resolve-font-height frame height)))
+      (message "Font set to %s" font)))))
 
 ;;; Interactive pickers
 

@@ -252,7 +252,7 @@ For deeper customization — headings with different weights per level, org-bloc
 | Command | Behavior |
 |---|---|
 | `M-x omarchy-theme-pick` | `completing-read` over `omarchy-theme-list`; calls `omarchy-theme-set` which broadcasts to all Omarchy surfaces. Falls back to an Emacs-only `omarchy-apply-theme` on non-Omarchy systems. |
-| `M-x omarchy-font-pick` | Same, for fonts. Preserves any externally-managed `:height` (Fontaine-friendly). |
+| `M-x omarchy-font-pick` | Same, for fonts. Changes the family only; the font size is left as is. |
 
 ### Desktop toggles
 
@@ -289,6 +289,13 @@ Core user-facing variables live in the `omarchy` customize group (`M-x customize
 
 ;; Fallback font family when `omarchy-font-current' reports nothing.
 (setq omarchy-default-font "Iosevka Nerd Font Mono")
+
+;; Fixed `default' face height (1/10 pt) applied with the Omarchy font.
+;; nil (the default) keeps whatever size is already in effect.
+(setq omarchy-font-height nil)
+
+;; Height used instead when the one in effect is unusable (below 2pt).
+(setq omarchy-fallback-font-height 110)
 
 ;; Where `omarchy-install-hooks' writes its scripts.
 (setq omarchy-hooks-directory "~/.config/omarchy/hooks")
@@ -377,7 +384,7 @@ Two subtleties that matter:
 
 ## FAQ
 
-**Does `omarchy-apply-font` conflict with Fontaine?** No. When called without an explicit `HEIGHT`, it reads and preserves the current `:height` on the `default` face — so Fontaine-managed size presets survive a font family change. Fontaine owns size; Omarchy owns family.
+**Does syncing the font or theme change my font size?** No. Switching the theme or the font family never touches the size: `omarchy-apply-font` reads the current `:height` of the `default` face and reapplies it, so whatever size you (or another package) configured survives. Set `omarchy-font-height` only if you want omarchy.el to own the size as well.
 
 **Can I use just the themes without the rest of the package?** Yes. The themes depend only on `omarchy-themes.el` (which brings in `modus-themes`) — not on `omarchy.el`. Add the repo to `load-path`, `(require 'omarchy-themes)`, then `M-x load-theme RET <any-bundled-theme> RET`. No `omarchy-init`, no Omarchy CLI dependency.
 
@@ -386,6 +393,8 @@ Two subtleties that matter:
 **Why derive from Modus instead of hand-rolling faces?** `modus-themes-theme` expands into a `custom-theme-set-faces` block generated from Modus's comprehensive ~400-face catalog against your palette. You get Magit, Org, Eglot, tree-sitter, Corfu, Vertico, and dozens of other packages styled coherently for free — and future Modus updates bring new package coverage without any work on your end. See the Modus Info node *Build on top of the Modus themes* for the pattern.
 
 **I changed the theme in Omarchy but Emacs didn't repaint.** The shell hooks forward changes to Emacs via `emacsclient`, which needs a running Emacs server. Either start Emacs as a daemon (`emacs --daemon`) or add `(require 'server) (unless (server-running-p) (server-start))` to your init. The hook scripts `pgrep -x emacs` before calling `emacsclient`, so no server means silently skipped updates — nothing in your message log. `M-x omarchy-install-hooks` warns at install time if the server isn't up.
+
+**The font size is wrong (tiny or huge) after a sync.** omarchy.el only changes the font *family*; the size is taken from the `default` face on a graphical frame, never from the daemon's hidden terminal frame. If the height in effect is unusable (below 2pt — typically a leftover `default` face customization made before any graphical frame existed), it falls back to 11pt and shows a one-time warning that explains where the value came from. To pin the size instead, set `omarchy-font-height`, or configure your font with `set-face-attribute` / `default-frame-alist` rather than `set-frame-font` in a daemon's init.
 
 **I set `<theme>-palette-overrides` but nothing changed.** Palette overrides are baked into face specs when the theme loads. Reload the theme after changing them: `M-x load-theme RET <theme> RET` (or just toggle away and back via `omarchy-theme-pick`). Same applies to `modus-themes-italic-constructs` and `modus-themes-bold-constructs`.
 
