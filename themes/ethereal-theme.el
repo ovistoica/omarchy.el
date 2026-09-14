@@ -9,12 +9,14 @@
 ;;; Commentary:
 ;;
 ;; Ethereal for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the syntax mapping from
-;; bjarneo/ethereal.nvim (lua/ethereal/groups/base.lua).
+;; `modus-themes-theme'.  Mirrors the Omarchy 4 `aether' Neovim rendering
+;; of /usr/share/omarchy/themes/ethereal/colors.toml.
 ;;
-;; Keyword -> purple (bold), Function/Identifier -> magenta2 (bluish),
-;; Constant -> purple, String -> green, Type -> yellow (bold),
-;; PreProc -> cyan, Operator -> fg, Comment -> muted italic.
+;; Keyword -> bright_magenta, Function -> blue, Type -> yellow,
+;; Constant -> bright_yellow, Number/Boolean -> orange, String -> green,
+;; @property -> bright_cyan, Builtin/PreProc -> cyan,
+;; Operator/Identifier -> foreground, Comment -> muted italic,
+;; DiagnosticError -> bright_red, DiagnosticWarn -> yellow.
 
 ;;; Code:
 
@@ -42,13 +44,16 @@
     (eth-green     "#92a593")
     (eth-magenta   "#c89dc1")
     (eth-magenta2  "#8e93de")
-    (eth-orange    "#faaaa9")
+    (eth-orange    "#eb8b54")  ; orange
+    (eth-salmon    "#faaaa9")  ; bright_red
     (eth-purple    "#c89dc1")
     (eth-red       "#ed5b5a")
     (eth-teal      "#a3bfd1")
     (eth-yellow    "#e9bb4f")
     (eth-comment   "#6d7db6")
-    (eth-special   "#f7dc9c")
+    (eth-special   "#f7dc9c")  ; bright_yellow
+    (eth-mist      "#dfeaf0")  ; bright_cyan
+    (eth-lilac     "#ead7e7")  ; bright_magenta
 
     ;; Modus primary color slots
     (red           "#ed5b5a")
@@ -106,31 +111,32 @@
   "Ethereal base colors, in Modus palette format.")
 
 (defconst ethereal-palette-mappings-partial
-  '(;; ---- Syntax (matches ethereal.nvim base.lua) ----
-    (keyword         eth-purple)       ; Keyword bold
-    (builtin         eth-cyan)         ; PreProc
-    (constant        eth-purple)       ; Constant
-    (fnname          eth-magenta2)     ; Function bold
-    (fnname-call     eth-magenta2)
-    (name            eth-magenta2)
-    (type            eth-yellow)       ; Type bold
-    (variable        eth-magenta2)     ; Identifier
-    (variable-use    eth-magenta2)
-    (identifier      eth-magenta2)
-    (property        eth-blue5)        ; @property/@field
-    (property-use    eth-blue5)
-    (string          eth-green)        ; String
+  '(;; ---- Syntax (matches the aether colorscheme slot mapping) ----
+    (keyword         eth-lilac)        ; Keyword -> bright_magenta
+    (builtin         eth-cyan)         ; @function.builtin -> cyan
+    (constant        eth-special)      ; Constant -> bright_yellow
+    (number          eth-orange)       ; Number, Boolean -> orange
+    (fnname          eth-blue)         ; Function -> blue
+    (fnname-call     eth-blue)
+    (name            eth-blue)
+    (type            eth-yellow)       ; Type -> yellow
+    (variable        fg-main)          ; @variable -> foreground
+    (variable-use    fg-main)
+    (identifier      fg-main)
+    (property        eth-mist)         ; @property -> bright_cyan
+    (property-use    eth-mist)
+    (string          eth-green)        ; String -> green
     (docstring       eth-green)
-    (comment         eth-comment)      ; italic
-    (preprocessor    eth-cyan)
-    (operator        fg-main)          ; Operator -> fg
+    (comment         eth-comment)      ; Comment -> muted (italic)
+    (preprocessor    eth-cyan)         ; PreProc -> cyan
+    (operator        fg-main)          ; Operator -> foreground
     (punctuation     fg-main)
     (rx-construct    eth-yellow)
     (rx-backslash    eth-special)
 
     ;; ---- Status / diagnostics ----
-    (err             eth-red)
-    (warning         eth-yellow)
+    (err             eth-salmon)       ; DiagnosticError -> bright_red
+    (warning         eth-yellow)       ; DiagnosticWarn -> yellow
     (info            eth-blue)
     (note            eth-cyan)
     (success         eth-green)
@@ -148,7 +154,7 @@
 
     ;; ---- Line numbers ----
     (fg-line-number-inactive   border)
-    (fg-line-number-active     eth-orange)
+    (fg-line-number-active     eth-salmon)
     (bg-line-number-inactive   bg-main)
     (bg-line-number-active     bg-alt)
 
@@ -157,7 +163,7 @@
     (fg-region                 fg-main)
     (bg-hl-line                bg-alt)
     (bg-paren-match            bg-active)
-    (fg-paren-match            eth-orange)
+    (fg-paren-match            eth-salmon)
     (bg-search-current         eth-yellow)
     (bg-search-lazy            bg-active)
 
@@ -179,7 +185,7 @@
     (fg-heading-3              eth-yellow)
     (fg-heading-4              eth-green)
     (fg-heading-5              eth-cyan)
-    (fg-heading-6              eth-orange)
+    (fg-heading-6              eth-salmon)
     (fg-heading-7              eth-red)
     (fg-heading-8              eth-special))
   "Semantic slot mappings for Ethereal.")
@@ -199,9 +205,9 @@
 
 ;; Ethereal italicizes comments.  Variables stay upright.
 (defvar ethereal-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,eth-magenta2 :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,eth-magenta2 :slant normal)))
-    `(help-argument-name           ((,c :foreground ,eth-magenta2 :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-main :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar ethereal-custom-variables nil

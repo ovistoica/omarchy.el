@@ -9,15 +9,20 @@
 ;;; Commentary:
 ;;
 ;; Miasma for Emacs, derived from Modus Vivendi via `modus-themes-theme'.
-;; Mirrors the Omarchy 4 miasma theme
-;; (/usr/share/omarchy/themes/miasma/colors.toml), itself a port of
-;; xero/miasma.nvim.
+;; Mirrors the Omarchy 4 `aether' Neovim rendering of
+;; /usr/share/omarchy/themes/miasma/colors.toml.
 ;;
-;; A warm, low-contrast earth palette on neutral gray: olive keywords,
-;; moss-green strings, gold and rust accents.  Upstream repeats every
-;; colour in its `bright_*' slots, so the Modus `-intense' variants are
-;; lightened toward the foreground and the `-faint' ones darkened toward
-;; the background.
+;; Keyword -> bright_magenta, Function -> blue, Type -> yellow,
+;; Constant -> bright_yellow, Number/Boolean -> orange, String -> green,
+;; @property -> bright_cyan, Builtin/PreProc -> cyan,
+;; Operator/Identifier -> foreground, Comment -> muted italic,
+;; DiagnosticError -> bright_red, DiagnosticWarn -> yellow.
+;;
+;; A warm, low-contrast earth palette on neutral gray: rust keywords,
+;; olive functions, moss-green strings and gold accents.  Upstream
+;; repeats every colour in its `bright_*' slots, so the Modus `-intense'
+;; variants are lightened toward the foreground and the `-faint' ones
+;; darkened toward the background.
 
 ;;; Code:
 
@@ -106,32 +111,33 @@
   "Miasma base colors, in Modus palette format.")
 
 (defconst miasma-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         mia-olive)
-    (builtin         mia-gold)
-    (constant        mia-rust)
-    (fnname          mia-gold)
-    (fnname-call     mia-gold)
-    (name            mia-gold)
-    (type            mia-orange)
-    (variable        fg-main)
+  '(;; ---- Syntax (matches the aether colorscheme slot mapping) ----
+    (keyword         mia-rust)         ; Keyword -> bright_magenta
+    (builtin         mia-gold)         ; @function.builtin -> cyan
+    (constant        mia-orange)       ; Constant -> bright_yellow
+    (number          mia-brown)        ; Number, Boolean -> orange
+    (fnname          mia-olive)        ; Function -> blue
+    (fnname-call     mia-olive)
+    (name            mia-olive)
+    (type            mia-orange)       ; Type -> yellow
+    (variable        fg-main)          ; @variable -> foreground
     (variable-use    fg-main)
     (identifier      fg-main)
-    (property        mia-brown)
-    (property-use    mia-brown)
-    (string          mia-green)
+    (property        mia-gold)         ; @property -> bright_cyan
+    (property-use    mia-gold)
+    (string          mia-green)        ; String -> green
     (docstring       mia-green)
-    (comment         mia-comment)
-    (preprocessor    mia-rust)
-    (operator        fg-main)
+    (comment         mia-comment)      ; Comment -> muted (italic)
+    (preprocessor    mia-gold)         ; PreProc -> cyan
+    (operator        fg-main)          ; Operator -> foreground
     (punctuation     mia-muted)
     (rx-construct    mia-gold)
     (rx-backslash    mia-orange)
 
     ;; ---- Status / diagnostics ----
-    (err             mia-rust)
-    (warning         mia-gold)
-    (info            mia-olive)
+    (err             mia-earth)        ; DiagnosticError -> bright_red
+    (warning         mia-orange)       ; DiagnosticWarn -> yellow
+    (info            mia-olive)        ; DiagnosticInfo -> blue
     (note            mia-brown)
     (success         mia-green)
 

@@ -95,7 +95,7 @@
     (bg-removed-faint    "#f7dde0")
     (bg-removed-refine   "#e9a9ae")
     (bg-removed-intense  "#d88088")
-    (fg-removed          "#7e0a22")
+    (fg-removed          "#590008")  ; Removed fg in catppuccin/nvim
     (fg-removed-intense  "#5d0517")
 
     (bg-changed          "#f3e3c5")
@@ -109,15 +109,16 @@
 (defconst catppuccin-latte-palette-mappings-partial
   '(;; ---- Syntax (matches catppuccin/nvim syntax.lua) ----
     (keyword         cat-mauve)
-    (builtin         cat-mauve)
+    (builtin         cat-peach)       ; @function.builtin
     (constant        cat-peach)
+    (number          cat-peach)       ; Number, Float
     (fnname          cat-blue)
     (fnname-call     cat-blue)
     (name            cat-blue)
     (type            cat-yellow)
-    (variable        cat-flamingo)
-    (variable-use    cat-flamingo)
-    (identifier      cat-flamingo)
+    (variable        fg-main)         ; @variable -> text
+    (variable-use    fg-main)
+    (identifier      fg-main)
     (property        cat-lavender)
     (property-use    cat-lavender)
     (string          cat-green)
@@ -199,9 +200,9 @@
   :group 'omarchy-themes)
 
 (defvar catppuccin-latte-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,cat-flamingo :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,cat-flamingo :slant normal)))
-    `(help-argument-name           ((,c :foreground ,cat-flamingo :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-main :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar catppuccin-latte-custom-variables nil

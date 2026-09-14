@@ -9,13 +9,14 @@
 ;;; Commentary:
 ;;
 ;; Monokai Pro Ristretto for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the syntax mapping from
-;; gthelding/monokai-pro.nvim with the `ristretto' filter.
+;; `modus-themes-theme'.  Mirrors the Omarchy 4 `aether' Neovim rendering
+;; of /usr/share/omarchy/themes/ristretto/colors.toml.
 ;;
-;; Keyword -> red (italic), Function -> green, Identifier -> white,
-;; String -> yellow, Constant/Number/Boolean -> magenta,
-;; Type/StorageClass -> yellow, Operator -> red, PreProc -> blue,
-;; Comment -> dimmed3 italic.
+;; Keyword -> bright_magenta (italic), Function -> blue, Type -> yellow,
+;; Constant -> bright_yellow, Number/Boolean -> orange, String -> green,
+;; @property -> bright_cyan, Builtin/PreProc -> cyan,
+;; Operator/Identifier -> foreground, Comment -> muted italic,
+;; DiagnosticError -> bright_red, DiagnosticWarn -> yellow.
 
 ;;; Code:
 
@@ -43,6 +44,11 @@
     (rist-green    "#adda78")  ; accent4
     (rist-cyan     "#85dacc")  ; accent5
     (rist-magenta  "#a8a9eb")  ; accent6
+    (rist-orange   "#fb9a77")  ; orange
+    (rist-rose     "#ff8297")  ; bright_red
+    (rist-gold     "#fcd675")  ; bright_yellow
+    (rist-aqua     "#9bf1e1")  ; bright_cyan
+    (rist-lilac    "#bebffd")  ; bright_magenta
     (rist-white    "#fff1f3")  ; text
     (rist-dimmed1  "#c3b7b8")
     (rist-dimmed2  "#948a8b")
@@ -105,31 +111,32 @@
   "Ristretto base colors, in Modus palette format.")
 
 (defconst ristretto-palette-mappings-partial
-  '(;; ---- Syntax (matches monokai-pro.nvim syntax.lua) ----
-    (keyword         rist-red)         ; Keyword (italic)
-    (builtin         rist-blue)        ; PreProc-ish
-    (constant        rist-magenta)     ; Constant, Number, Boolean
-    (fnname          rist-green)       ; Function
-    (fnname-call     rist-green)
-    (name            rist-green)
-    (type            rist-yellow)      ; Type, StorageClass
-    (variable        rist-white)       ; Identifier
+  '(;; ---- Syntax (matches the aether colorscheme slot mapping) ----
+    (keyword         rist-lilac)       ; Keyword (italic) -> bright_magenta
+    (builtin         rist-cyan)        ; @function.builtin -> cyan
+    (constant        rist-gold)        ; Constant -> bright_yellow
+    (number          rist-orange)      ; Number, Boolean -> orange
+    (fnname          rist-blue)        ; Function -> blue
+    (fnname-call     rist-blue)
+    (name            rist-blue)
+    (type            rist-yellow)      ; Type -> yellow
+    (variable        rist-white)       ; @variable -> foreground
     (variable-use    rist-white)
     (identifier      rist-white)
-    (property        rist-cyan)        ; @property
-    (property-use    rist-cyan)
-    (string          rist-yellow)      ; String
-    (docstring       rist-yellow)
-    (comment         rist-dimmed3)     ; italic
-    (preprocessor    rist-blue)        ; PreProc (accent2)
-    (operator        rist-red)         ; Operator
+    (property        rist-aqua)        ; @property -> bright_cyan
+    (property-use    rist-aqua)
+    (string          rist-green)       ; String -> green
+    (docstring       rist-green)
+    (comment         rist-dimmed3)     ; Comment -> muted (italic)
+    (preprocessor    rist-cyan)        ; PreProc -> cyan
+    (operator        rist-white)       ; Operator -> foreground
     (punctuation     rist-dimmed1)     ; Delimiter
     (rx-construct    rist-magenta)
     (rx-backslash    rist-cyan)
 
     ;; ---- Status / diagnostics ----
-    (err             rist-red)
-    (warning         rist-yellow)
+    (err             rist-rose)        ; DiagnosticError -> bright_red
+    (warning         rist-yellow)      ; DiagnosticWarn -> yellow
     (info            rist-blue)
     (note            rist-cyan)
     (success         rist-green)
@@ -201,7 +208,7 @@
   '(`(font-lock-variable-name-face ((,c :foreground ,rist-white :slant normal)))
     `(font-lock-variable-use-face  ((,c :foreground ,rist-white :slant normal)))
     `(help-argument-name           ((,c :foreground ,rist-white :slant normal)))
-    `(font-lock-keyword-face       ((,c :foreground ,rist-red :slant italic))))
+    `(font-lock-keyword-face       ((,c :foreground ,rist-lilac :slant italic))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar ristretto-custom-variables nil

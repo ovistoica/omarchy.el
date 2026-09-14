@@ -9,17 +9,16 @@
 ;;; Commentary:
 ;;
 ;; Everforest for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Aligned with the doom-style port at
-;; https://github.com/theorytoe/everforest-emacs (hard-dark palette);
-;; Omarchy's Neovim config uses `background = "soft"' so we keep the
-;; soft-dark surface shades from sainnhe/everforest and use the
-;; theorytoe syntax mapping for faces.
+;; `modus-themes-theme'.  Surfaces follow sainnhe/everforest (Omarchy's
+;; Neovim config uses `background = "soft"'); the syntax mapping mirrors
+;; neanias/everforest-nvim so Emacs and Neovim render code consistently.
+;; Named slots keep the theorytoe/everforest-emacs prefix convention.
 ;;
-;; Key semantic groups (theorytoe face categories):
-;;   keywords  red      builtin  cyan      constants cyan
-;;   functions green    methods  green     type      green
-;;   strings   green    variables blue     numbers   purple
-;;   operators fg       comments mono-3 italic      region    gutter
+;; Key semantic groups (everforest-nvim highlight groups):
+;;   keywords  red      builtin  green     constants aqua
+;;   functions green    methods  green     type      yellow
+;;   strings   green    variables fg       numbers   purple
+;;   operators orange   comments mono-3 italic      region    gutter
 
 ;;; Code:
 
@@ -44,12 +43,12 @@
 
     ;; theorytoe everforest-emacs named slots
     (ever-red      "#e67e80")   ; keywords
-    (ever-orange   "#e69875")
-    (ever-yellow   "#ddbc7f")   ; warning (note: theorytoe uses #ddbc7f, sainnhe uses #dbbc7f)
-    (ever-green    "#a7c080")   ; functions, strings, types, success
-    (ever-aqua     "#83c092")   ; builtin, constants (called `cyan' in theorytoe)
-    (ever-blue     "#7fbbb3")   ; variables
-    (ever-purple   "#d699b6")   ; numbers
+    (ever-orange   "#e69875")   ; operators
+    (ever-yellow   "#dbbc7f")   ; types, warning (sainnhe yellow; theorytoe uses #ddbc7f)
+    (ever-green    "#a7c080")   ; functions, builtin, strings, success
+    (ever-aqua     "#83c092")   ; constants (called `cyan' in theorytoe)
+    (ever-blue     "#7fbbb3")   ; properties, info
+    (ever-purple   "#d699b6")   ; numbers, preprocessor
     (ever-grey0    "#7a8478")
     (ever-grey1    "#859289")   ; mono-3
     (ever-grey2    "#9da9a0")   ; silver
@@ -112,24 +111,25 @@
   "Everforest base colors, aligned with theorytoe/everforest-emacs.")
 
 (defconst everforest-palette-mappings-partial
-  '(;; ---- Syntax (matches theorytoe/everforest-emacs categories) ----
+  '(;; ---- Syntax (matches neanias/everforest-nvim groups) ----
     (keyword         ever-red)         ; keywords -> red
-    (builtin         ever-aqua)        ; builtin -> cyan (aqua)
-    (constant        ever-aqua)        ; constants -> cyan (aqua)
+    (builtin         ever-green)       ; @function.builtin -> green
+    (constant        ever-aqua)        ; constants -> aqua
+    (number          ever-purple)      ; @number -> purple
     (fnname          ever-green)       ; functions -> green
     (fnname-call     ever-green)
     (name            ever-green)
-    (type            ever-green)       ; types -> green (theorytoe)
-    (variable        ever-blue)        ; variables -> blue
-    (variable-use    ever-blue)
-    (identifier      ever-blue)
-    (property        ever-blue)
+    (type            ever-yellow)      ; Type -> yellow
+    (variable        fg-main)          ; @variable -> fg
+    (variable-use    fg-main)
+    (identifier      fg-main)
+    (property        ever-blue)        ; @property -> blue
     (property-use    ever-blue)
     (string          ever-green)       ; strings -> green
     (docstring       ever-green)
     (comment         ever-grey1)       ; comments -> mono-3 italic
-    (preprocessor    ever-purple)      ; PreProc sainnhe default
-    (operator        fg-main)          ; operators -> fg (orange in sainnhe; theorytoe uses fg)
+    (preprocessor    ever-purple)      ; PreProc -> purple
+    (operator        ever-orange)      ; Operator -> orange
     (punctuation     ever-grey2)
     (rx-construct    ever-purple)
     (rx-backslash    ever-aqua)
@@ -188,7 +188,7 @@
     (fg-heading-6              ever-red)
     (fg-heading-7              ever-blue)
     (fg-heading-8              ever-grey2))
-  "Semantic slot mappings for Everforest (theorytoe alignment).")
+  "Semantic slot mappings for Everforest (everforest-nvim alignment).")
 
 (defconst everforest-palette
   (modus-themes-generate-palette
@@ -205,9 +205,9 @@
 
 ;; Everforest italicizes comments.  Variables stay plain.
 (defvar everforest-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,ever-blue :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,ever-blue :slant normal)))
-    `(help-argument-name           ((,c :foreground ,ever-blue :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-main :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar everforest-custom-variables nil

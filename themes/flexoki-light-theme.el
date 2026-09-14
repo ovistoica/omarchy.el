@@ -9,9 +9,9 @@
 ;;; Commentary:
 ;;
 ;; Flexoki Light for Emacs, derived from Modus Operandi Tinted via
-;; `modus-themes-theme'.  Mirrors the canonical flexoki-emacs-theme
-;; (https://codeberg.org/crmsnbleyd/flexoki-emacs-theme) face mapping
-;; so Emacs renders code the same way as the reference implementation.
+;; `modus-themes-theme'.  Mirrors the syntax colours of the Omarchy 4
+;; Neovim scheme kepano/flexoki-neovim (`flexoki-light') so Emacs
+;; renders code the same way as Neovim.
 ;;
 ;; Flexoki palette (from Steph Ango's design, https://stephango.com/flexoki):
 ;;   paper    #fffcf0   bg-main
@@ -19,20 +19,21 @@
 ;;   base-100 #e6e4d9   ui / bg-alt
 ;;   base-150 #dad8ce   ui-2
 ;;   base-200 #cecdc3   ui-3 / region / show-paren bg
-;;   base-300 #b7b5ac   hl-line / tx-3
-;;   base-500 #878580   comments, muted text
+;;   base-300 #b7b5ac   comments, hl-line / tx-3
+;;   base-500 #878580   muted text
+;;   base-600 #6f6e69   builtins, operators
 ;;   base-700 #575653   fg-alt
 ;;   base-800 #403e3c   fg-faint
 ;;   base-900 #232726   deep text
 ;;   black    #100f0f   default fg
 ;;   red      #af3029   errors, diff remove
 ;;   orange   #bc5215   function names
-;;   yellow   #ad8301   types, warnings, paren match
-;;   green    #66800b   builtins, diff add, success
-;;   cyan     #24837b   strings
-;;   blue     #205ea6   variables, types, diff changed
-;;   purple   #5e409d   constants, minibuffer prompt
-;;   magenta  #a02f6f   keywords
+;;   yellow   #ad8301   constants, warnings, paren match
+;;   green    #66800b   keywords, types, diff add, success
+;;   cyan     #24837b   strings, info
+;;   blue     #205ea6   variables, properties, diff changed
+;;   purple   #5e409d   numbers, minibuffer prompt
+;;   magenta  #a02f6f   preprocessor
 ;;
 ;; Uses modus-operandi-tinted as the base since flexoki shares its paper
 ;; tinted background philosophy.  Because this theme uses the Modus
@@ -69,7 +70,8 @@
     (flex-purple   "#5e409d")
     (flex-magenta  "#a02f6f")
     (flex-meek     "#878580")  ; base-500
-    (flex-tx-3     "#b7b5ac")  ; base-300
+    (flex-base-600 "#6f6e69")  ; flexoki-600 — builtin, operator
+    (flex-tx-3     "#b7b5ac")  ; base-300 — comment
     (flex-ui-2     "#dad8ce")  ; base-150
 
     ;; Modus primary color slots — mapped to Flexoki equivalents
@@ -130,24 +132,25 @@ Unspecified entries are filled in by `modus-themes-generate-palette'
 from `modus-themes-operandi-tinted-palette'.")
 
 (defconst flexoki-light-palette-mappings-partial
-  '(;; ---- Syntax (matches crmsnbleyd/flexoki-emacs-theme) ----
-    (keyword         flex-magenta)   ; Keyword, Conditional, Include
-    (builtin         flex-green)     ; Builtin
-    (constant        flex-purple)    ; Constant, Character, Number
-    (fnname          flex-orange)    ; Function definitions
+  '(;; ---- Syntax (matches kepano/flexoki-neovim) ----
+    (keyword         flex-green)     ; @keyword -> green
+    (builtin         flex-base-600)  ; @function.builtin -> base-600
+    (constant        flex-yellow)    ; Constant -> yellow
+    (number          flex-purple)    ; @number -> purple
+    (fnname          flex-orange)    ; @function -> orange
     (fnname-call     flex-orange)    ; Function calls
     (name            flex-orange)
-    (type            flex-yellow)    ; Type, TypeDef, Structure
-    (variable        flex-blue)      ; @variable
+    (type            flex-green)     ; Type -> green
+    (variable        flex-blue)      ; @variable -> blue
     (variable-use    flex-blue)      ; usages
     (identifier      flex-blue)      ; Identifier
-    (property        flex-blue)      ; @property, @field
+    (property        flex-blue)      ; @property -> blue
     (property-use    flex-blue)
-    (string          flex-cyan)      ; String, @string
-    (docstring       flex-cyan)      ; docstrings — muted + italic
-    (comment         flex-meek)      ; Comment — base-500, italic
-    (preprocessor    fg-main)        ; PreProc — strong black
-    (operator        fg-main)        ; Operator
+    (string          flex-cyan)      ; String -> cyan
+    (docstring       flex-cyan)      ; docstrings — same as strings
+    (comment         flex-tx-3)      ; Comment -> base-300
+    (preprocessor    flex-magenta)   ; PreProc -> magenta
+    (operator        flex-base-600)  ; Operator -> base-600
     (punctuation     fg-alt)         ; Delimiter
     (rx-construct    flex-purple)    ; regex constructs
     (rx-backslash    flex-purple)    ; escapes
@@ -155,7 +158,7 @@ from `modus-themes-operandi-tinted-palette'.")
     ;; ---- Status / diagnostics ----
     (err             flex-red)
     (warning         flex-yellow)
-    (info            flex-blue)
+    (info            flex-cyan)      ; DiagnosticInfo -> cyan
     (note            flex-purple)
     (success         flex-green)
 
@@ -207,8 +210,8 @@ from `modus-themes-operandi-tinted-palette'.")
     (fg-heading-7              flex-yellow)
     (fg-heading-8              flex-red))
   "Semantic slot mappings for Flexoki Light.
-Mirrors the canonical flexoki-emacs-theme face specification so Emacs
-renders source code consistently with the reference implementation.")
+Mirrors the kepano/flexoki-neovim highlight groups so Emacs renders
+source code consistently with the Omarchy Neovim setup.")
 
 (defconst flexoki-light-palette
   (modus-themes-generate-palette

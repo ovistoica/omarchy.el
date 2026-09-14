@@ -9,17 +9,23 @@
 ;;; Commentary:
 ;;
 ;; White for Emacs, derived from Modus Operandi via
-;; `modus-themes-theme'.  Mirrors the Omarchy 4 white theme
-;; (/usr/share/omarchy/themes/white/colors.toml), which ships no editor
-;; plugin of its own.
+;; `modus-themes-theme'.  Mirrors the Omarchy 4 `aether' Neovim rendering
+;; of /usr/share/omarchy/themes/white/colors.toml.
+;;
+;; Keyword -> bright_magenta, Function -> blue, Type -> yellow,
+;; Constant -> bright_yellow, Number/Boolean -> orange (absent upstream,
+;; so foreground), String -> green, @property -> bright_cyan,
+;; Builtin/PreProc -> cyan, Operator/Identifier -> foreground,
+;; Comment -> muted italic, DiagnosticError -> bright_red,
+;; DiagnosticWarn -> yellow.
 ;;
 ;; Pure #ffffff paper with pure #000000 text (contrast 21:1); syntax is
-;; a ladder of near-black grays (#1a1a1a to #4a4a4a) with #6e6e6e
-;; comments, all at 5:1 or better against the background.  Upstream's
+;; a ladder of near-black grays (#1a1a1a to #4a4a4a) with #808080
+;; comments, all at 4:1 or better against the background.  Upstream's
 ;; `light_foreground'/`bright_foreground' are both #000000, so `fg-alt'
-;; is derived one step lighter.  Diagnostics and diffs use two derived,
-;; heavily desaturated signal colours (`wh-alert', `wh-ok') so errors
-;; and diff hunks remain distinguishable in an achromatic theme.
+;; is derived one step lighter.  Mode-line diagnostics and diffs use two
+;; derived, heavily desaturated signal colours (`wh-alert', `wh-ok') so
+;; diff hunks remain distinguishable in an achromatic theme.
 
 ;;; Code:
 
@@ -48,7 +54,7 @@
     (wh-cyan       "#3e3e3e")
     (wh-yellow     "#4a4a4a")
     (wh-accent     "#6e6e6e")
-    (wh-comment    "#6e6e6e")
+    (wh-comment    "#808080")  ; muted
     (wh-muted      "#808080")
     (wh-alert      "#8f2f2f")  ; derived signal colour
     (wh-ok         "#2f6a3f")  ; derived signal colour
@@ -109,32 +115,33 @@
   "White base colors, in Modus palette format.")
 
 (defconst white-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         wh-blue)
-    (builtin         wh-cyan)
-    (constant        wh-magenta)
-    (fnname          wh-red)
-    (fnname-call     wh-red)
-    (name            wh-red)
-    (type            wh-cyan)
-    (variable        fg-main)
+  '(;; ---- Syntax (matches the aether colorscheme slot mapping) ----
+    (keyword         wh-magenta)       ; Keyword -> bright_magenta
+    (builtin         wh-cyan)          ; @function.builtin -> cyan
+    (constant        wh-yellow)        ; Constant -> bright_yellow
+    (number          fg-main)          ; Number, Boolean -> orange (absent)
+    (fnname          wh-blue)          ; Function -> blue
+    (fnname-call     wh-blue)
+    (name            wh-blue)
+    (type            wh-yellow)        ; Type -> yellow
+    (variable        fg-main)          ; @variable -> foreground
     (variable-use    fg-main)
     (identifier      fg-main)
-    (property        wh-yellow)
-    (property-use    wh-yellow)
-    (string          wh-green)
+    (property        wh-cyan)          ; @property -> bright_cyan
+    (property-use    wh-cyan)
+    (string          wh-green)         ; String -> green
     (docstring       wh-accent)
-    (comment         wh-comment)
-    (preprocessor    wh-magenta)
-    (operator        fg-main)
+    (comment         wh-comment)       ; Comment -> muted (italic)
+    (preprocessor    wh-cyan)          ; PreProc -> cyan
+    (operator        fg-main)          ; Operator -> foreground
     (punctuation     wh-yellow)
     (rx-construct    wh-cyan)
     (rx-backslash    wh-red)
 
     ;; ---- Status / diagnostics ----
-    (err             wh-alert)
-    (warning         wh-yellow)
-    (info            wh-blue)
+    (err             wh-red)           ; DiagnosticError -> bright_red
+    (warning         wh-yellow)        ; DiagnosticWarn -> yellow
+    (info            wh-blue)          ; DiagnosticInfo -> blue
     (note            wh-cyan)
     (success         wh-ok)
 

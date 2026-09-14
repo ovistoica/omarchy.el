@@ -9,14 +9,18 @@
 ;;; Commentary:
 ;;
 ;; Lumon for Emacs, derived from Modus Vivendi via `modus-themes-theme'.
-;; Mirrors the Omarchy 4 lumon theme
-;; (/usr/share/omarchy/themes/lumon/colors.toml), whose upstream Neovim
-;; counterpart is omacom-io/lumon.nvim.
+;; Surfaces follow the Omarchy 4 lumon colors.toml; syntax colours mirror
+;; the Omarchy 4 Neovim scheme omacom-io/lumon.nvim.
 ;;
-;; Every upstream ANSI slot is a shade of Lumon blue, so syntax stays
-;; monochromatic by design.  Two off-palette signal colours (`lum-alert'
-;; and `lum-ok') are derived here for diagnostics and diffs, which would
-;; otherwise be indistinguishable from ordinary text.
+;; Every upstream slot is a shade of Lumon blue, so syntax stays
+;; monochromatic by design.  Syntax mapping (lumon.nvim palette keys):
+;;   @keyword/@function/@variable/Constant magenta2
+;;   String/@property green     Type yellow      @number dark5
+;;   builtin/PreProc/Operator blue5              Comment comment
+;;   Error red                  Warn  yellow     Info    blue
+;; Two off-palette signal colours (`lum-alert' and `lum-ok') are still
+;; derived here for diffs and the mode line, which would otherwise be
+;; indistinguishable from ordinary text.
 
 ;;; Code:
 
@@ -48,6 +52,16 @@
     (lum-glow      "#f2fcff")  ; bright_blue / active_border_color
     (lum-alert     "#d98a80")  ; derived: no warm colour upstream
     (lum-ok        "#6fbf9a")  ; derived: no green upstream
+
+    ;; lumon.nvim syntax slots
+    (lum-magenta2  "#9fcfe9")  ; magenta2 — @keyword, @function, @variable
+    (lum-green     "#79abd2")  ; green — String, @property
+    (lum-yellow    "#86b6da")  ; yellow — Type, DiagnosticWarn
+    (lum-dark5     "#8fb9dc")  ; dark5 — @number
+    (lum-blue5     "#b5deef")  ; blue5 — builtin, PreProc, Operator
+    (lum-red       "#6e9fca")  ; red — DiagnosticError
+    (lum-azure     "#92c7e7")  ; blue — DiagnosticInfo
+    (lum-comment   "#355066")  ; comment (== bg_highlight)
 
     ;; Modus primary color slots
     (red           "#4d86b0")
@@ -105,32 +119,33 @@
   "Lumon base colors, in Modus palette format.")
 
 (defconst lumon-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         lum-accent)
-    (builtin         lum-cyan)
-    (constant        lum-cyan)
-    (fnname          lum-blue)
-    (fnname-call     lum-blue)
-    (name            lum-blue)
-    (type            lum-sky)
-    (variable        fg-alt)
-    (variable-use    fg-alt)
-    (identifier      fg-alt)
-    (property        lum-sky)
-    (property-use    lum-sky)
-    (string          lum-steel)
-    (docstring       lum-steel)
-    (comment         lum-deep)
-    (preprocessor    lum-accent)
-    (operator        fg-main)
+  '(;; ---- Syntax (matches lumon.nvim) ----
+    (keyword         lum-magenta2)      ; @keyword -> magenta2
+    (builtin         lum-blue5)         ; @function.builtin -> blue5
+    (constant        lum-magenta2)      ; Constant -> magenta2
+    (number          lum-dark5)         ; @number -> dark5
+    (fnname          lum-magenta2)      ; @function -> magenta2
+    (fnname-call     lum-magenta2)
+    (name            lum-magenta2)
+    (type            lum-yellow)        ; Type -> yellow
+    (variable        lum-magenta2)      ; @variable -> magenta2
+    (variable-use    lum-magenta2)
+    (identifier      lum-magenta2)
+    (property        lum-green)         ; @property -> green
+    (property-use    lum-green)
+    (string          lum-green)         ; String -> green
+    (docstring       lum-green)
+    (comment         lum-comment)       ; Comment -> comment
+    (preprocessor    lum-blue5)         ; PreProc -> blue5
+    (operator        lum-blue5)         ; Operator -> blue5
     (punctuation     fg-alt)
     (rx-construct    lum-cyan)
     (rx-backslash    lum-accent)
 
     ;; ---- Status / diagnostics ----
-    (err             lum-alert)
-    (warning         lum-accent)
-    (info            lum-blue)
+    (err             lum-red)           ; DiagnosticError -> red
+    (warning         lum-yellow)        ; DiagnosticWarn -> yellow
+    (info            lum-azure)         ; DiagnosticInfo -> blue
     (note            lum-cyan)
     (success         lum-ok)
 
@@ -198,9 +213,9 @@
 
 ;; Keep variable faces upright; only comments are slanted upstream.
 (defvar lumon-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,fg-alt :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,fg-alt :slant normal)))
-    `(help-argument-name           ((,c :foreground ,fg-alt :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,lum-magenta2 :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,lum-magenta2 :slant normal)))
+    `(help-argument-name           ((,c :foreground ,lum-magenta2 :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar lumon-custom-variables nil
