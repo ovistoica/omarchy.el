@@ -9,11 +9,12 @@
 ;;; Commentary:
 ;;
 ;; Matte Black for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the highlight spec from
-;; tahayvr/matteblack.nvim.
+;; `modus-themes-theme'.  Mirrors the highlight spec of the Omarchy 4
+;; Neovim scheme tahayvr/matteblack.nvim.
 ;;
-;; Keyword/Statement/Tag -> green, Function/Identifier -> crimson/amber,
-;; Constant -> amber, String -> fg1 (neutral), Number/Character -> gold,
+;; Keyword/Statement/Tag -> green, Function -> crimson,
+;; Identifier/Constant/@function.builtin -> amber, @property -> orange,
+;; String -> fg1 (neutral), Number/Character -> gold,
 ;; Type/StorageClass/PreProc -> yellow, Operator -> fg2,
 ;; Comment -> muted italic.
 
@@ -112,8 +113,9 @@
 (defconst matte-black-palette-mappings-partial
   '(;; ---- Syntax (matches matteblack.nvim) ----
     (keyword         mb-green)        ; Keyword, Statement, Conditional, Repeat, Exception
-    (builtin         mb-yellow)       ; PreProc, Macro, Define, PreCondit
+    (builtin         mb-amber)        ; @function.builtin -> amber
     (constant        mb-amber)        ; Constant
+    (number          mb-gold)         ; @number -> gold
     (fnname          mb-crimson)      ; Function
     (fnname-call     mb-crimson)
     (name            mb-crimson)
@@ -121,8 +123,8 @@
     (variable        mb-amber)        ; Identifier -> amber
     (variable-use    mb-amber)
     (identifier      mb-amber)
-    (property        mb-amber)
-    (property-use    mb-amber)
+    (property        mb-orange)       ; @property -> orange
+    (property-use    mb-orange)
     (string          fg-main)         ; String -> fg1
     (docstring       mb-comment)      ; docstring -> muted
     (comment         mb-comment)      ; italic

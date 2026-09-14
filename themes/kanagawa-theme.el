@@ -112,8 +112,9 @@
 (defconst kanagawa-palette-mappings-partial
   '(;; ---- Syntax (matches kanagawa.nvim wave.syn) ----
     (keyword         kana-oni-violet)     ; Keyword, Statement
-    (builtin         kana-wave-red)       ; Macro, PreProc
+    (builtin         kana-spring-blue)    ; @function.builtin -> springBlue
     (constant        kana-surimi-orange)  ; Constant
+    (number          kana-sakura-pink)    ; Number -> sakuraPink
     (fnname          kana-crystal-blue)   ; Function
     (fnname-call     kana-crystal-blue)
     (name            kana-crystal-blue)

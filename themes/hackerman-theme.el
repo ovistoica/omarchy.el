@@ -9,15 +9,19 @@
 ;;; Commentary:
 ;;
 ;; Hackerman for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the Omarchy 4 hackerman theme
-;; (/usr/share/omarchy/themes/hackerman/colors.toml), whose upstream
-;; Neovim counterpart is bjarneo/hackerman.nvim.
+;; `modus-themes-theme'.  Surfaces follow the Omarchy 4 hackerman
+;; colors.toml; syntax colours mirror the Omarchy 4 Neovim scheme
+;; bjarneo/hackerman.nvim.
 ;;
-;; A green-on-near-black "terminal" palette: every ANSI slot upstream is
-;; a shade of green or cyan, with two desaturated blues (blue/magenta)
-;; as the only cool accents.  Because upstream's `red' is itself green,
-;; a soft red (`hack-alert') is derived here for diagnostics and diff
-;; removals -- otherwise errors would be indistinguishable from success.
+;; A green-on-near-black "terminal" palette: every slot upstream is a
+;; shade of green or cyan.  Syntax mapping (hackerman.nvim palette keys):
+;;   @keyword  bright_purple   @function  blue        Type      yellow
+;;   String    green           @variable  fg          @property bright_cyan
+;;   Constant  bright_yellow   @number    orange      builtin   cyan
+;;   PreProc   cyan            Operator   fg          Comment   muted
+;;   Error     bright_red      Warn       yellow      Info      blue
+;; Upstream's `red' is itself green, so a soft red (`hack-alert') is
+;; still derived here for diff removals and the mode line error face.
 
 ;;; Code:
 
@@ -48,8 +52,17 @@
     (hack-magenta  "#86a7df")
     (hack-lime     "#50f872")  ; red
     (hack-moss     "#287b51")  ; brown
-    (hack-comment  "#6a6e95")
+    (hack-comment  "#6a6e95")  ; muted
     (hack-alert    "#e0736b")  ; derived: no warm colour upstream
+
+    ;; hackerman.nvim syntax slots
+    (hack-purple-bright "#85e0bc")  ; bright_purple — @keyword
+    (hack-aqua          "#5ec8d4")  ; blue — @function, DiagnosticInfo
+    (hack-seafoam       "#7cf8d4")  ; yellow — Type, DiagnosticWarn
+    (hack-yellow-bright "#a4ffe6")  ; bright_yellow — Constant
+    (hack-orange        "#85ff9d")  ; orange — @number
+    (hack-cyan-bright   "#a4faf9")  ; bright_cyan — @property
+    (hack-red-bright    "#7cff9b")  ; bright_red — DiagnosticError
 
     ;; Modus primary color slots
     (red           "#50f872")
@@ -107,32 +120,33 @@
   "Hackerman base colors, in Modus palette format.")
 
 (defconst hackerman-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         hack-accent)
-    (builtin         hack-cyan)
-    (constant        hack-teal)
-    (fnname          hack-blue)
-    (fnname-call     hack-blue)
-    (name            hack-blue)
-    (type            hack-mint)
-    (variable        hack-magenta)
-    (variable-use    hack-magenta)
-    (identifier      hack-magenta)
-    (property        hack-cyan)
-    (property-use    hack-cyan)
-    (string          hack-green)
+  '(;; ---- Syntax (matches hackerman.nvim) ----
+    (keyword         hack-purple-bright) ; @keyword -> bright_purple
+    (builtin         hack-cyan)          ; @function.builtin -> cyan
+    (constant        hack-yellow-bright) ; Constant -> bright_yellow
+    (number          hack-orange)        ; @number -> orange
+    (fnname          hack-aqua)          ; @function -> blue
+    (fnname-call     hack-aqua)
+    (name            hack-aqua)
+    (type            hack-seafoam)       ; Type -> yellow
+    (variable        fg-main)            ; @variable -> Normal fg
+    (variable-use    fg-main)
+    (identifier      fg-main)
+    (property        hack-cyan-bright)   ; @property -> bright_cyan
+    (property-use    hack-cyan-bright)
+    (string          hack-green)         ; String -> green
     (docstring       hack-moss)
-    (comment         hack-comment)
-    (preprocessor    hack-cyan)
+    (comment         hack-comment)       ; Comment -> muted
+    (preprocessor    hack-cyan)          ; PreProc -> cyan
     (operator        fg-main)
     (punctuation     fg-alt)
     (rx-construct    hack-teal)
     (rx-backslash    hack-cyan)
 
     ;; ---- Status / diagnostics ----
-    (err             hack-alert)
-    (warning         hack-teal)
-    (info            hack-blue)
+    (err             hack-red-bright)    ; DiagnosticError -> bright_red
+    (warning         hack-seafoam)       ; DiagnosticWarn -> yellow
+    (info            hack-aqua)          ; DiagnosticInfo -> blue
     (note            hack-cyan)
     (success         hack-green)
 
@@ -200,9 +214,9 @@
 
 ;; Keep variable faces upright; only comments are slanted upstream.
 (defvar hackerman-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,hack-magenta :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,hack-magenta :slant normal)))
-    `(help-argument-name           ((,c :foreground ,hack-magenta :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-main :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar hackerman-custom-variables nil

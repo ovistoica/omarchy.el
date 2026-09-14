@@ -9,9 +9,14 @@
 ;;; Commentary:
 ;;
 ;; Lupine for Emacs, derived from Modus Operandi via
-;; `modus-themes-theme'.  Mirrors the Omarchy 4 lupine theme
-;; (/usr/share/omarchy/themes/lupine/colors.toml), which ships no editor
-;; plugin of its own.
+;; `modus-themes-theme'.  Mirrors the Omarchy 4 `aether' Neovim rendering
+;; of /usr/share/omarchy/themes/lupine/colors.toml.
+;;
+;; Keyword -> bright_magenta, Function -> blue, Type -> yellow,
+;; Constant -> bright_yellow, Number/Boolean -> orange, String -> green,
+;; @property -> bright_cyan, Builtin/PreProc -> cyan,
+;; Operator/Identifier -> foreground, Comment -> muted italic,
+;; DiagnosticError -> bright_red, DiagnosticWarn -> yellow.
 ;;
 ;; Near-white paper with an all-cool palette: lupin blues, violets and a
 ;; single magenta-pink standing in for `red'.  Upstream has no green, so
@@ -46,7 +51,11 @@
     (lup-purple    "#8a4ad7")  ; magenta
     (lup-pink      "#c900c4")  ; red
     (lup-navy      "#013a6f")  ; brown
-    (lup-comment   "#757575")
+    (lup-fuchsia   "#f930fb")  ; bright_red
+    (lup-cerulean  "#358fff")  ; bright_yellow
+    (lup-cornflower "#3986ff") ; bright_cyan
+    (lup-lilac     "#b363ff")  ; bright_magenta
+    (lup-comment   "#9e9e9e")  ; muted
     (lup-ok        "#2f7d4f")  ; derived: no green upstream
 
     ;; Modus primary color slots
@@ -105,32 +114,33 @@
   "Lupine base colors, in Modus palette format.")
 
 (defconst lupine-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         lup-purple)
-    (builtin         lup-sky)
-    (constant        lup-violet)
-    (fnname          lup-blue)
+  '(;; ---- Syntax (matches the aether colorscheme slot mapping) ----
+    (keyword         lup-lilac)        ; Keyword -> bright_magenta
+    (builtin         lup-sky)          ; @function.builtin -> cyan
+    (constant        lup-cerulean)     ; Constant -> bright_yellow
+    (number          lup-azure)        ; Number, Boolean -> orange
+    (fnname          lup-blue)         ; Function -> blue
     (fnname-call     lup-blue)
     (name            lup-blue)
-    (type            lup-azure)
-    (variable        fg-alt)
-    (variable-use    fg-alt)
-    (identifier      fg-alt)
-    (property        lup-sky)
-    (property-use    lup-sky)
-    (string          lup-navy)
-    (docstring       lup-navy)
-    (comment         lup-comment)
-    (preprocessor    lup-pink)
-    (operator        fg-main)
+    (type            lup-azure)        ; Type -> yellow
+    (variable        fg-main)          ; @variable -> foreground
+    (variable-use    fg-main)
+    (identifier      fg-main)
+    (property        lup-cornflower)   ; @property -> bright_cyan
+    (property-use    lup-cornflower)
+    (string          lup-violet)       ; String -> green
+    (docstring       lup-violet)
+    (comment         lup-comment)      ; Comment -> muted (italic)
+    (preprocessor    lup-sky)          ; PreProc -> cyan
+    (operator        fg-main)          ; Operator -> foreground
     (punctuation     fg-alt)
     (rx-construct    lup-purple)
     (rx-backslash    lup-pink)
 
     ;; ---- Status / diagnostics ----
-    (err             lup-pink)
-    (warning         lup-purple)
-    (info            lup-blue)
+    (err             lup-fuchsia)      ; DiagnosticError -> bright_red
+    (warning         lup-azure)        ; DiagnosticWarn -> yellow
+    (info            lup-blue)         ; DiagnosticInfo -> blue
     (note            lup-sky)
     (success         lup-ok)
 
@@ -180,7 +190,7 @@
     (fg-heading-5              lup-sky)
     (fg-heading-6              lup-navy)
     (fg-heading-7              fg-alt)
-    (fg-heading-8              lup-comment))
+    (fg-heading-8              fg-dim))
   "Semantic slot mappings for Lupine.")
 
 (defconst lupine-palette
@@ -198,9 +208,9 @@
 
 ;; Keep variable faces upright; only comments are slanted upstream.
 (defvar lupine-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,fg-alt :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,fg-alt :slant normal)))
-    `(help-argument-name           ((,c :foreground ,fg-alt :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-main :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar lupine-custom-variables nil

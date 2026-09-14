@@ -19,12 +19,12 @@
 ;;   bg           #111c18   default background (from Omarchy)
 ;;   bg_yellow    #e2c792   comments
 ;;   green        #8fb573   strings
-;;   orange       #ff9966   constants, numbers, booleans
+;;   orange       #ff9966   constants, numbers, booleans, builtin functions
 ;;   yellow       #dbb651   types, constructors
 ;;   blue         #57a5e5   functions (def + call)
 ;;   cyan         #70c2be   @variable.member, @property
 ;;   purple       #aaaaff   keywords, conditionals, statements
-;;   bright_purple #df73ff  macros
+;;   bright_purple #df73ff  regex constructs
 ;;   red          #e75a7c   identifiers, @variable.builtin, errors
 ;;   coral        #f08080   @variable.parameter, @string.escape
 ;;   light_grey   #838781   delimiters, punctuation
@@ -131,8 +131,9 @@ syntax palette.")
 (defconst osaka-jade-palette-mappings-partial
   '(;; ---- Syntax (matches bamboo.nvim vulgaris) ----
     (keyword         bamboo-purple)         ; Keyword, Conditional, Statement, PreProc, Include
-    (builtin         bamboo-bright-purple)  ; Macro, @function.macro
-    (constant        bamboo-orange)         ; Constant, Number, Boolean, Character, Float
+    (builtin         bamboo-orange)         ; @function.builtin
+    (constant        bamboo-orange)         ; Constant, Boolean, Character
+    (number          bamboo-orange)         ; Number, Float
     (fnname          bamboo-blue)           ; Function (def)
     (fnname-call     bamboo-blue)           ; Function calls
     (name            bamboo-blue)

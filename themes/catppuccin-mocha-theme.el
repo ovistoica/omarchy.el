@@ -23,7 +23,7 @@
 ;;   text     #cdd6f4   default fg
 ;;   rosewater#f5e0dc   cursor
 ;;   red      #f38ba8   errors
-;;   peach    #fab387   constants, numbers, booleans
+;;   peach    #fab387   constants, numbers, booleans, builtin functions
 ;;   yellow   #f9e2af   types, storage classes
 ;;   green    #a6e3a1   strings, diff-add
 ;;   teal     #94e2d5   characters, escapes
@@ -33,7 +33,7 @@
 ;;   lavender #b4befe   tags
 ;;   mauve    #cba6f7   keywords, conditionals, macros
 ;;   pink     #f5c2e7   PreProc, special
-;;   flamingo #f2cdcd   identifiers/variables
+;;   text     #cdd6f4   variables (@variable)
 
 ;;; Code:
 
@@ -132,15 +132,16 @@
 (defconst catppuccin-mocha-palette-mappings-partial
   '(;; ---- Syntax (matches catppuccin/nvim syntax.lua) ----
     (keyword         cat-mauve)       ; Keyword, Statement, Conditional, Repeat, Exception, Include
-    (builtin         cat-mauve)       ; Macro = mauve
-    (constant        cat-peach)       ; Constant, Number, Boolean, Float
+    (builtin         cat-peach)       ; @function.builtin = peach
+    (constant        cat-peach)       ; Constant, Boolean
+    (number          cat-peach)       ; Number, Float
     (fnname          cat-blue)        ; Function definitions
     (fnname-call     cat-blue)        ; Function calls
     (name            cat-blue)
     (type            cat-yellow)      ; Type, Structure, Typedef, StorageClass
-    (variable        cat-flamingo)    ; Identifier
-    (variable-use    cat-flamingo)
-    (identifier      cat-flamingo)
+    (variable        fg-main)         ; @variable = text
+    (variable-use    fg-main)
+    (identifier      fg-main)
     (property        cat-lavender)    ; @property, @field
     (property-use    cat-lavender)
     (string          cat-green)       ; String
@@ -225,9 +226,9 @@ Mirrors the catppuccin/nvim syntax group specification.")
 ;; Catppuccin italicizes comments but not variables.  Override
 ;; variable faces back to upright.
 (defvar catppuccin-mocha-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,cat-flamingo :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,cat-flamingo :slant normal)))
-    `(help-argument-name           ((,c :foreground ,cat-flamingo :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-main :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar catppuccin-mocha-custom-variables nil

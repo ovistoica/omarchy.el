@@ -19,10 +19,10 @@
 ;;   text    #575279   default fg, variables
 ;;   subtle  #797593   comments, operators, delimiters
 ;;   muted   #9893a5   borders, inactive text
-;;   love    #b4637a   errors, git delete
-;;   rose    #d7827e   functions, booleans, methods
+;;   love    #b4637a   errors, git delete, diff removed
+;;   rose    #d7827e   functions, builtin functions, booleans, methods
 ;;   pine    #286983   keywords, conditionals, imports
-;;   foam    #56949f   types, properties, fields
+;;   foam    #56949f   types, properties, fields, diff added
 ;;   iris    #907aa9   macros, parameters, attributes
 ;;   gold    #ea9d34   strings, numbers, constants
 ;;   leaf    #6d8f89   accent (icons only in nvim)
@@ -98,14 +98,14 @@
     (bg-added-faint      "#e3efdf")
     (bg-added-refine     "#c2d9b5")
     (bg-added-intense    "#a9c79a")
-    (fg-added            "#3e5c2a")
+    (fg-added            "#56949f")  ; Added -> foam
     (fg-added-intense    "#2f4720")
 
     (bg-removed          "#f2d9d9")
     (bg-removed-faint    "#f7e6e6")
     (bg-removed-refine   "#e9c3c3")
     (bg-removed-intense  "#d89999")
-    (fg-removed          "#8a1f3a")
+    (fg-removed          "#b4637a")  ; Removed -> love
     (fg-removed-intense  "#6b1228")
 
     (bg-changed          "#f3e3c2")
@@ -121,8 +121,9 @@ from `modus-themes-operandi-palette'.")
 (defconst rose-pine-palette-mappings-partial
   '(;; ---- Syntax (matches rose-pine/neovim lua/rose-pine.lua) ----
     (keyword         rose-pine)     ; Keyword, Conditional, Include, Exception
-    (builtin         rose-iris)     ; Macro, Define, PreCondit
-    (constant        rose-gold)     ; Constant, Character, Number, Float
+    (builtin         rose-rose)     ; @function.builtin -> rose
+    (constant        rose-gold)     ; Constant, Character
+    (number          rose-gold)     ; Number, Float -> gold
     (fnname          rose-rose)     ; Function (definitions)
     (fnname-call     rose-rose)     ; Function calls (font-lock-function-call-face)
     (name            rose-rose)     ; general "name" slot

@@ -9,15 +9,19 @@
 ;;; Commentary:
 ;;
 ;; Retro 82 for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the Omarchy 4 retro-82 theme
-;; (/usr/share/omarchy/themes/retro-82/colors.toml), whose upstream
-;; Neovim counterpart is OldJobobo/retro-82.nvim.
+;; `modus-themes-theme'.  Mirrors the syntax colours of the Omarchy 4
+;; Neovim scheme OldJobobo/retro-82.nvim (a base24 palette).
 ;;
-;; Sunset over deep navy: cream text, orange/amber accents and a teal
-;; family standing in for green, cyan and blue.  Upstream's `muted' is
-;; too dark to read as comment text, so `r82-comment' lightens it toward
-;; the mint tone; the `-intense' slots are likewise lightened because
-;; upstream repeats its colours in `bright_*'.
+;; Sunset over deep navy: mint text, orange/amber accents and a teal
+;; family standing in for green, cyan and blue.  Syntax mapping
+;; (retro-82.nvim palette keys):
+;;   Normal/@variable/@property  base06 (fg-main)
+;;   Comment   base03            String     base0B (cream)
+;;   keyword/func/preproc base0A (orange)   Type   base1D (sky)
+;;   Constant/Number base18 (coral)         builtin base0C (mint)
+;;   Error base08   Warn base09 (amber)     Info   base1C (azure)
+;; The `-intense' slots are lightened because upstream repeats its
+;; colours in `bright_*'.
 
 ;;; Code:
 
@@ -33,18 +37,23 @@
     (border        "#2a6b78")  ; muted
 
     ;; Foregrounds
-    (fg-main       "#f6dcac")  ; foreground
+    (fg-main       "#a7c9c6")  ; base06 — Normal fg
     (fg-dim        "#3f8f8a")  ; dark_foreground
     (fg-alt        "#a7c9c6")  ; light_foreground
     (cursor        "#f6dcac")  ; bright_foreground
 
     ;; Retro 82 named slots
-    (r82-orange    "#faa968")  ; accent
-    (r82-amber     "#e97b3c")  ; yellow
-    (r82-red       "#f85525")
+    (r82-orange    "#faa968")  ; accent / base0A
+    (r82-amber     "#e97b3c")  ; yellow / base09
+    (r82-red       "#f85525")  ; base08
     (r82-teal      "#028391")  ; green
     (r82-sea       "#3f8f8a")  ; blue / magenta
-    (r82-mint      "#8cbfb8")  ; cyan
+    (r82-mint      "#8cbfb8")  ; cyan / base0C
+    (r82-cream     "#f6dcac")  ; base0B — String
+    (r82-coral     "#ff8a6b")  ; base18 — Constant, Number
+    (r82-sky       "#6fa6c8")  ; base1D — Type
+    (r82-azure     "#39b5d4")  ; base1C — DiagnosticInfo
+    (r82-ink       "#134e5a")  ; base03 — Comment (upstream, == selection)
     (r82-brown     "#743d1e")
     (r82-comment   "#569195")  ; derived: muted lightened to read as text
 
@@ -104,23 +113,24 @@
   "Retro 82 base colors, in Modus palette format.")
 
 (defconst retro-82-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         r82-red)
-    (builtin         r82-mint)
-    (constant        r82-orange)
-    (fnname          r82-orange)
+  '(;; ---- Syntax (matches retro-82.nvim) ----
+    (keyword         r82-orange)       ; @keyword -> base0A
+    (builtin         r82-mint)         ; @function.builtin -> base0C
+    (constant        r82-coral)        ; Constant -> base18
+    (number          r82-coral)        ; @number -> base18
+    (fnname          r82-orange)       ; @function -> base0A
     (fnname-call     r82-orange)
     (name            r82-orange)
-    (type            r82-amber)
-    (variable        fg-main)
+    (type            r82-sky)          ; Type -> base1D
+    (variable        fg-main)          ; @variable -> Normal fg
     (variable-use    fg-main)
     (identifier      fg-main)
-    (property        r82-sea)
-    (property-use    r82-sea)
-    (string          r82-mint)
+    (property        fg-main)          ; @property -> Normal fg
+    (property-use    fg-main)
+    (string          r82-cream)        ; String -> base0B
     (docstring       r82-sea)
-    (comment         r82-comment)
-    (preprocessor    r82-sea)
+    (comment         r82-ink)          ; Comment -> base03
+    (preprocessor    r82-orange)       ; PreProc -> base0A
     (operator        fg-main)
     (punctuation     fg-alt)
     (rx-construct    r82-amber)
@@ -129,7 +139,7 @@
     ;; ---- Status / diagnostics ----
     (err             r82-red)
     (warning         r82-amber)
-    (info            r82-sea)
+    (info            r82-azure)        ; DiagnosticInfo -> base1C
     (note            r82-mint)
     (success         r82-teal)
 

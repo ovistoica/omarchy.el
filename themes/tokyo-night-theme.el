@@ -9,14 +9,16 @@
 ;;; Commentary:
 ;;
 ;; Tokyo Night for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the slot mapping from
-;; doom-themes/doom-tokyo-night (night background, VSCode palette).
+;; `modus-themes-theme'.  Surfaces follow doom-themes/doom-tokyo-night;
+;; syntax colours mirror the Omarchy 4 Neovim scheme
+;; folke/tokyonight.nvim (`tokyonight-night').
 ;;
-;; Key semantic groups (doom "face categories"):
-;;   builtin  red         keyword   magenta    operator  dark-cyan
-;;   function blue        methods   blue       type      base8
-;;   strings  dark-green  variables base8      numbers   orange
-;;   constants orange     comments  base1/5    region    base0
+;; Syntax mapping (tokyonight palette keys):
+;;   @keyword  purple    @function  blue      Type      blue1
+;;   String    green     @variable  fg        @property green1
+;;   Constant  orange    @number    orange    builtin   blue1
+;;   PreProc   cyan      Operator   blue5     Comment   comment
+;;   Error     red1      Warn       yellow    Info      blue2
 
 ;;; Code:
 
@@ -46,15 +48,21 @@
     (tn-orange      "#ff9e64")  ; constants, numbers
     (tn-yellow      "#e0af68")  ; warnings, fn params
     (tn-green       "#9ece6a")  ; strings (dark-green)
-    (tn-green-bright "#73daca") ; green accent
-    (tn-teal        "#2ac3de")  ; support fns
+    (tn-green-bright "#73daca") ; green1 — @property
+    (tn-teal        "#2ac3de")  ; blue1 — Type, @function.builtin
     (tn-blue        "#7aa2f7")  ; functions
-    (tn-dark-cyan   "#7dcfff")  ; operators, properties
-    (tn-magenta     "#bb9af7")  ; keywords
+    (tn-dark-cyan   "#7dcfff")  ; cyan — PreProc
+    (tn-magenta     "#bb9af7")  ; magenta (doom keywords)
     (tn-violet      "#9aa5ce")
     (tn-cyan        "#b4f9f8")
     (tn-dark-blue   "#565f89")
     (tn-brown       "#cfc9c2")
+
+    ;; tokyonight.nvim syntax slots
+    (tn-purple      "#9d7cd8")  ; purple — @keyword
+    (tn-blue2       "#0db9d7")  ; blue2 — DiagnosticInfo
+    (tn-blue5       "#89ddff")  ; blue5 — Operator
+    (tn-red1        "#db4b4b")  ; red1 — DiagnosticError
 
     ;; Modus primary color slots
     (red           "#f7768e")
@@ -112,32 +120,33 @@
   "Tokyo Night base colors, aligned with doom-themes' doom-tokyo-night.")
 
 (defconst tokyo-night-palette-mappings-partial
-  '(;; ---- Syntax (matches doom-tokyo-night face categories) ----
-    (keyword         tn-magenta)       ; keywords -> magenta
-    (builtin         tn-red)           ; builtin -> red
-    (constant        tn-orange)        ; constants + numbers -> orange
-    (fnname          tn-blue)          ; functions -> blue
+  '(;; ---- Syntax (matches tokyonight.nvim) ----
+    (keyword         tn-purple)        ; @keyword -> purple
+    (builtin         tn-teal)          ; @function.builtin -> blue1
+    (constant        tn-orange)        ; Constant -> orange
+    (number          tn-orange)        ; @number -> orange
+    (fnname          tn-blue)          ; @function -> blue
     (fnname-call     tn-blue)
     (name            tn-blue)
-    (type            tn-base8)         ; type -> base8 (plain bright fg)
-    (variable        tn-base8)         ; variables -> base8
+    (type            tn-teal)          ; Type -> blue1
+    (variable        tn-base8)         ; @variable -> fg
     (variable-use    tn-base8)
     (identifier      tn-base8)
-    (property        tn-dark-cyan)     ; @property -> dark-cyan (object props)
-    (property-use    tn-dark-cyan)
-    (string          tn-green)         ; strings -> dark-green
+    (property        tn-green-bright)  ; @property -> green1
+    (property-use    tn-green-bright)
+    (string          tn-green)         ; String -> green
     (docstring       tn-dark-blue)     ; doc-comments (lightened dark-blue)
-    (comment         tn-dark-blue)     ; comments -> base1/dark-blue
-    (preprocessor    tn-dark-cyan)     ; import/export -> dark-cyan
-    (operator        tn-dark-cyan)     ; operators -> dark-cyan
+    (comment         tn-dark-blue)     ; Comment -> comment
+    (preprocessor    tn-dark-cyan)     ; PreProc -> cyan
+    (operator        tn-blue5)         ; Operator -> blue5
     (punctuation     fg-main)          ; fg
     (rx-construct    tn-magenta)       ; regex symbols -> magenta
     (rx-backslash    tn-cyan)          ; regex literals -> cyan
 
     ;; ---- Status / diagnostics ----
-    (err             tn-red)
-    (warning         tn-yellow)
-    (info            tn-blue)
+    (err             tn-red1)          ; DiagnosticError -> red1
+    (warning         tn-yellow)        ; DiagnosticWarn -> yellow
+    (info            tn-blue2)         ; DiagnosticInfo -> blue2
     (note            tn-dark-cyan)
     (success         tn-green-bright)
 
@@ -188,7 +197,7 @@
     (fg-heading-6              tn-yellow)
     (fg-heading-7              tn-teal)
     (fg-heading-8              tn-red))
-  "Semantic slot mappings for Tokyo Night (doom-themes alignment).")
+  "Semantic slot mappings for Tokyo Night (tokyonight.nvim syntax).")
 
 (defconst tokyo-night-palette
   (modus-themes-generate-palette
@@ -203,9 +212,8 @@
   :type '(repeat (list symbol (choice symbol string)))
   :group 'omarchy-themes)
 
-;; doom-tokyo-night does not italicize by default.  We italicize
-;; comments for parity with the rest of the omarchy pack; variables
-;; and types stay upright (type=base8, variable=base8 in doom).
+;; tokyonight.nvim italicizes comments and keywords only.  Variables
+;; stay upright plain fg (variable=fg in tokyonight).
 (defvar tokyo-night-custom-faces
   '(`(font-lock-variable-name-face ((,c :foreground ,tn-base8 :slant normal)))
     `(font-lock-variable-use-face  ((,c :foreground ,tn-base8 :slant normal)))

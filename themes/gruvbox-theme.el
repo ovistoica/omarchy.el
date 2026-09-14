@@ -13,9 +13,9 @@
 ;; ellisonleao/gruvbox.nvim so Emacs and Neovim render source code
 ;; consistently.
 ;;
-;; Keyword → red, Function → green, Identifier → blue, Type → yellow,
-;; String → green, Constant → purple, PreProc → aqua, Operator → orange,
-;; Comment → gray italic.
+;; Keyword → red, Function → green, @variable → fg, Type → yellow,
+;; String → green, Constant/Number → purple, @function.builtin → orange,
+;; PreProc → aqua, Operator → orange, Comment → gray italic.
 
 ;;; Code:
 
@@ -107,15 +107,16 @@
 (defconst gruvbox-palette-mappings-partial
   '(;; ---- Syntax (matches gruvbox.nvim) ----
     (keyword         gruv-red)        ; Keyword, Statement -> GruvboxRed
-    (builtin         gruv-aqua)       ; PreProc, Macro
-    (constant        gruv-purple)     ; Constant, Number, Boolean
+    (builtin         gruv-orange)     ; @function.builtin -> GruvboxOrange
+    (constant        gruv-purple)     ; Constant, Boolean
+    (number          gruv-purple)     ; Number, Float -> GruvboxPurple
     (fnname          gruv-green)      ; Function -> GruvboxGreenBold
     (fnname-call     gruv-green)
     (name            gruv-green)
     (type            gruv-yellow)     ; Type, Typedef
-    (variable        gruv-blue)       ; Identifier -> GruvboxBlue
-    (variable-use    gruv-blue)
-    (identifier      gruv-blue)
+    (variable        fg-main)         ; @variable -> GruvboxFg1
+    (variable-use    fg-main)
+    (identifier      fg-main)
     (property        gruv-blue)       ; @property
     (property-use    gruv-blue)
     (string          gruv-green)      ; String
@@ -198,9 +199,9 @@
 
 ;; Gruvbox italicizes comments and operators by default.
 (defvar gruvbox-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,gruv-blue :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,gruv-blue :slant normal)))
-    `(help-argument-name           ((,c :foreground ,gruv-blue :slant normal)))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-main :slant normal)))
     ;; gruvbox.nvim links Function to GruvboxGreenBold
     `(font-lock-function-name-face ((,c :foreground ,gruv-green :weight bold))))
   "Additional face specs layered on top of the Modus-generated faces.")

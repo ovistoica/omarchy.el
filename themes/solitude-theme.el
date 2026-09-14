@@ -9,16 +9,20 @@
 ;;; Commentary:
 ;;
 ;; Solitude for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the Omarchy 4 solitude theme
-;; (/usr/share/omarchy/themes/solitude/colors.toml), whose upstream
-;; Neovim counterpart is ficcdaf/ashen.nvim.
+;; `modus-themes-theme'.  Mirrors the syntax colours of the Omarchy 4
+;; Neovim scheme ficcdaf/ashen.nvim.
 ;;
-;; A cold slate monochrome lit by a single ember red (`sol-ember',
-;; upstream `bright_red') used for keywords, errors and diff removals.
-;; Upstream's `bright_green'/`bright_magenta' are darker than their plain
-;; counterparts, so the Modus `-intense' variants are lightened here
-;; instead; `sol-comment' lightens `muted' enough to read as text, and
-;; the diff greens/blues are desaturated derivations.
+;; A cold slate monochrome lit by ashen's red/orange family.  Syntax
+;; mapping (ashen.nvim palette keys):
+;;   Comment g_6           String red_glowing     @keyword/PreProc red_ember
+;;   @function/builtin g_0 Type/Constant orange_blaze   @number blue
+;;   @property/Info g_2    Operator orange_glow
+;;   Error red_flame       Warn orange_golden
+;; `sol-ember' (upstream `bright_red') still marks diff removals and UI
+;; accents.  Upstream's `bright_green'/`bright_magenta' are darker than
+;; their plain counterparts, so the Modus `-intense' variants are
+;; lightened here instead, and the diff greens/blues are desaturated
+;; derivations.
 
 ;;; Code:
 
@@ -50,6 +54,18 @@
     (sol-steel     "#565d60")  ; red
     (sol-silver    "#a8adb0")  ; active_border_color
     (sol-comment   "#6b7276")  ; derived: muted lightened to read as text
+
+    ;; ashen.nvim syntax slots
+    (sol-red-ember   "#b14242")  ; red_ember — @keyword, PreProc
+    (sol-red-glow    "#df6464")  ; red_glowing — String
+    (sol-red-flame   "#c53030")  ; red_flame — DiagnosticError
+    (sol-blaze       "#c4693d")  ; orange_blaze — Type, Constant
+    (sol-orange-glow "#d87c4a")  ; orange_glow — Operator
+    (sol-golden      "#e5a72a")  ; orange_golden — DiagnosticWarn
+    (sol-teal        "#4a8b8b")  ; blue — @number
+    (sol-g0          "#e5e5e5")  ; g_0 — @function, @function.builtin
+    (sol-g2          "#d5d5d5")  ; g_2 — @property, DiagnosticInfo
+    (sol-g6          "#737373")  ; g_6 — Comment
 
     ;; Modus primary color slots
     (red           "#565d60")
@@ -107,32 +123,33 @@
   "Solitude base colors, in Modus palette format.")
 
 (defconst solitude-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         sol-ember)
-    (builtin         sol-sand)
-    (constant        sol-sand)
-    (fnname          sol-pearl)
-    (fnname-call     sol-pearl)
-    (name            sol-pearl)
-    (type            sol-mist)
-    (variable        fg-main)
+  '(;; ---- Syntax (matches ashen.nvim) ----
+    (keyword         sol-red-ember)    ; @keyword -> red_ember
+    (builtin         sol-g0)           ; @function.builtin -> g_0
+    (constant        sol-blaze)        ; Constant -> orange_blaze
+    (number          sol-teal)         ; @number -> blue
+    (fnname          sol-g0)           ; @function -> g_0
+    (fnname-call     sol-g0)
+    (name            sol-g0)
+    (type            sol-blaze)        ; Type -> orange_blaze
+    (variable        fg-main)          ; @variable -> Normal fg
     (variable-use    fg-main)
     (identifier      fg-main)
-    (property        sol-gray)
-    (property-use    sol-gray)
-    (string          sol-mist)
+    (property        sol-g2)           ; @property -> g_2
+    (property-use    sol-g2)
+    (string          sol-red-glow)     ; String -> red_glowing
     (docstring       sol-comment)
-    (comment         sol-comment)
-    (preprocessor    sol-accent)
-    (operator        fg-main)
+    (comment         sol-g6)           ; Comment -> g_6
+    (preprocessor    sol-red-ember)    ; PreProc -> red_ember
+    (operator        sol-orange-glow)  ; Operator -> orange_glow
     (punctuation     sol-gray)
     (rx-construct    sol-sand)
     (rx-backslash    sol-ember)
 
     ;; ---- Status / diagnostics ----
-    (err             sol-ember)
-    (warning         sol-sand)
-    (info            sol-accent)
+    (err             sol-red-flame)    ; DiagnosticError -> red_flame
+    (warning         sol-golden)       ; DiagnosticWarn -> orange_golden
+    (info            sol-g2)           ; DiagnosticInfo -> g_2
     (note            sol-gray)
     (success         sol-mist)
 

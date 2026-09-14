@@ -9,18 +9,23 @@
 ;;; Commentary:
 ;;
 ;; Vantablack for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the Omarchy 4 vantablack theme
-;; (/usr/share/omarchy/themes/vantablack/colors.toml), which ships no
-;; editor plugin of its own.
+;; `modus-themes-theme'.  Mirrors the Omarchy 4 `aether' Neovim rendering
+;; of /usr/share/omarchy/themes/vantablack/colors.toml.
+;;
+;; Keyword -> bright_magenta, Function -> blue, Type -> yellow,
+;; Constant -> bright_yellow, Number/Boolean -> orange, String -> green,
+;; @property -> bright_cyan, Builtin/PreProc -> cyan,
+;; Operator/Identifier -> foreground, Comment -> muted italic,
+;; DiagnosticError -> bright_red, DiagnosticWarn -> yellow.
 ;;
 ;; Pure #000000 canvas with pure #ffffff text (contrast 21:1); syntax is
-;; a ladder of grays from #ececec down to #7a7a7a, all at 4.8:1 or
+;; a ladder of grays from #cecece down to #7a7a7a, all at 4.8:1 or
 ;; better against the background.  Upstream has no `bg' step below
 ;; #000000 and repeats `selection' as `lighter_background', so `bg-alt'
 ;; is derived a notch below `selection' to keep the region visible over
-;; `hl-line'.  Diagnostics and diffs use two derived, heavily
-;; desaturated signal colours (`vb-alert', `vb-ok') so errors and diff
-;; hunks remain distinguishable in an otherwise achromatic theme.
+;; `hl-line'.  Mode-line diagnostics and diffs use two derived, heavily
+;; desaturated signal colours (`vb-alert', `vb-ok') so diff hunks remain
+;; distinguishable in an otherwise achromatic theme.
 
 ;;; Code:
 
@@ -111,32 +116,33 @@
   "Vantablack base colors, in Modus palette format.")
 
 (defconst vantablack-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         vb-yellow)
-    (builtin         vb-cyan)
-    (constant        vb-orange)
-    (fnname          vb-silver)
-    (fnname-call     vb-silver)
-    (name            vb-silver)
-    (type            vb-cyan)
-    (variable        fg-main)
+  '(;; ---- Syntax (matches the aether colorscheme slot mapping) ----
+    (keyword         vb-magenta)       ; Keyword -> bright_magenta
+    (builtin         vb-cyan)          ; @function.builtin -> cyan
+    (constant        vb-yellow)        ; Constant -> bright_yellow
+    (number          vb-orange)        ; Number, Boolean -> orange
+    (fnname          vb-blue)          ; Function -> blue
+    (fnname-call     vb-blue)
+    (name            vb-blue)
+    (type            vb-yellow)        ; Type -> yellow
+    (variable        fg-main)          ; @variable -> foreground
     (variable-use    fg-main)
     (identifier      fg-main)
-    (property        vb-magenta)
-    (property-use    vb-magenta)
-    (string          vb-green)
+    (property        vb-cyan)          ; @property -> bright_cyan
+    (property-use    vb-cyan)
+    (string          vb-green)         ; String -> green
     (docstring       vb-comment)
-    (comment         vb-comment)
-    (preprocessor    vb-blue)
-    (operator        fg-main)
+    (comment         vb-comment)       ; Comment -> muted (italic)
+    (preprocessor    vb-cyan)          ; PreProc -> cyan
+    (operator        fg-main)          ; Operator -> foreground
     (punctuation     vb-magenta)
     (rx-construct    vb-orange)
     (rx-backslash    vb-yellow)
 
     ;; ---- Status / diagnostics ----
-    (err             vb-alert)
-    (warning         vb-yellow)
-    (info            vb-blue)
+    (err             vb-red)           ; DiagnosticError -> bright_red
+    (warning         vb-yellow)        ; DiagnosticWarn -> yellow
+    (info            vb-blue)          ; DiagnosticInfo -> blue
     (note            vb-cyan)
     (success         vb-ok)
 

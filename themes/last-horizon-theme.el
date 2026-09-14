@@ -9,9 +9,15 @@
 ;;; Commentary:
 ;;
 ;; Last Horizon for Emacs, derived from Modus Vivendi via
-;; `modus-themes-theme'.  Mirrors the Omarchy 4 last-horizon theme
-;; (/usr/share/omarchy/themes/last-horizon/colors.toml), whose editor
-;; counterpart upstream is rikkarth's "Ship at Sea".
+;; `modus-themes-theme'.  Mirrors the Omarchy 4 `aether' Neovim rendering
+;; of /usr/share/omarchy/themes/last-horizon/colors.toml.
+;;
+;; Keyword -> bright_magenta, Function -> blue, Type -> yellow,
+;; Constant -> bright_yellow, Number/Boolean -> orange (absent upstream,
+;; so foreground), String -> green, @property -> bright_cyan,
+;; Builtin/PreProc -> cyan, Operator/Identifier -> foreground,
+;; Comment -> muted italic, DiagnosticError -> bright_red,
+;; DiagnosticWarn -> yellow.
 ;;
 ;; A near-black canvas with a small, low-saturation set of dusk colours:
 ;; a rose accent, a warm salmon, muted teal, lavender and pale sky blue.
@@ -106,32 +112,33 @@
   "Last Horizon base colors, in Modus palette format.")
 
 (defconst last-horizon-palette-mappings-partial
-  '(;; ---- Syntax ----
-    (keyword         lh-rose)
-    (builtin         lh-lavender)
-    (constant        lh-red)
-    (fnname          lh-sky)
-    (fnname-call     lh-sky)
-    (name            lh-sky)
-    (type            lh-lavender)
-    (variable        fg-alt)
-    (variable-use    fg-alt)
-    (identifier      fg-alt)
-    (property        lh-lavender)
+  '(;; ---- Syntax (matches the aether colorscheme slot mapping) ----
+    (keyword         lh-sky)           ; Keyword -> bright_magenta
+    (builtin         lh-lavender)      ; @function.builtin -> cyan
+    (constant        lh-plum)          ; Constant -> bright_yellow
+    (number          fg-main)          ; Number, Boolean -> orange (absent)
+    (fnname          lh-rose)          ; Function -> blue
+    (fnname-call     lh-rose)
+    (name            lh-rose)
+    (type            lh-plum)          ; Type -> yellow
+    (variable        fg-main)          ; @variable -> foreground
+    (variable-use    fg-main)
+    (identifier      fg-main)
+    (property        lh-lavender)      ; @property -> bright_cyan
     (property-use    lh-lavender)
-    (string          lh-teal)
+    (string          lh-teal)          ; String -> green
     (docstring       lh-slate)
-    (comment         lh-comment)
-    (preprocessor    lh-red)
-    (operator        fg-main)
+    (comment         lh-comment)       ; Comment -> muted (italic)
+    (preprocessor    lh-lavender)      ; PreProc -> cyan
+    (operator        fg-main)          ; Operator -> foreground
     (punctuation     fg-alt)
     (rx-construct    lh-sky)
     (rx-backslash    lh-red)
 
     ;; ---- Status / diagnostics ----
-    (err             lh-red)
-    (warning         lh-rose)
-    (info            lh-lavender)
+    (err             lh-red)           ; DiagnosticError -> bright_red
+    (warning         lh-plum)          ; DiagnosticWarn -> yellow
+    (info            lh-rose)          ; DiagnosticInfo -> blue
     (note            lh-sky)
     (success         lh-teal)
 
@@ -199,9 +206,9 @@
 
 ;; Keep variable faces upright; only comments are slanted upstream.
 (defvar last-horizon-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,fg-alt :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,fg-alt :slant normal)))
-    `(help-argument-name           ((,c :foreground ,fg-alt :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-main :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-main :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-main :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar last-horizon-custom-variables nil

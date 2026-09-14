@@ -9,13 +9,15 @@
 ;;; Commentary:
 ;;
 ;; Nord for Emacs, derived from Modus Vivendi via `modus-themes-theme'.
-;; Mirrors the slot mapping from doom-themes/doom-nord.
+;; Surfaces follow doom-themes/doom-nord; syntax colours mirror the
+;; Omarchy 4 Neovim scheme EdenEast/nightfox.nvim (`nordfox').
 ;;
-;; Key semantic groups (doom "face categories"):
-;;   keyword  blue       builtin   blue       operator  blue
-;;   function cyan       methods   cyan       type      teal
-;;   strings  green      variables base7      numbers   magenta
-;;   constants blue      region    base4      comments  lightened-base5
+;; Syntax mapping (nordfox palette keys):
+;;   @keyword  magenta.base   @function  blue.bright    Type      yellow.base
+;;   String    green.base     @variable  white.base     @property blue.base
+;;   Constant  orange.bright  @number    orange.base    builtin   red.base
+;;   PreProc   pink.bright    Operator   fg2            Comment   comment
+;;   Error     red.base       Warn       yellow.base    Info      blue.base
 
 ;;; Code:
 
@@ -57,6 +59,14 @@
     (nord-violet   "#5d80ae")
     (nord-cyan     "#88c0d0")  ; functions, methods
     (nord-dark-cyan "#507681")
+
+    ;; nordfox syntax slots
+    (nord-blue-bright   "#8cafd2")  ; blue.bright — @function
+    (nord-orange-base   "#c9826b")  ; orange.base — @number
+    (nord-orange-bright "#d89079")  ; orange.bright — Constant
+    (nord-pink-bright   "#d092ce")  ; pink.bright — PreProc
+    (nord-fg2           "#abb1bb")  ; fg2 — Operator
+    (nord-comment       "#60728a")  ; comment
 
     ;; Modus primary color slots
     (red           "#bf616a")
@@ -114,24 +124,25 @@
   "Nord base colors, aligned with doom-themes' doom-nord.")
 
 (defconst nord-palette-mappings-partial
-  '(;; ---- Syntax (matches doom-nord face categories) ----
-    (keyword         nord-blue)         ; keyword -> blue
-    (builtin         nord-blue)         ; builtin -> blue
-    (constant        nord-blue)         ; constants -> blue
-    (fnname          nord-cyan)         ; functions -> cyan
-    (fnname-call     nord-cyan)
-    (name            nord-cyan)
-    (type            nord-teal)         ; type -> teal
-    (variable        nord-base7)        ; variables -> base7
-    (variable-use    nord-base7)
-    (identifier      nord-base7)
-    (property        nord-base7)
-    (property-use    nord-base7)
-    (string          nord-green)        ; strings -> green
+  '(;; ---- Syntax (matches nightfox nordfox) ----
+    (keyword         nord-magenta)      ; @keyword -> magenta.base
+    (builtin         nord-red)          ; @function.builtin -> red.base
+    (constant        nord-orange-bright) ; Constant -> orange.bright
+    (number          nord-orange-base)  ; @number -> orange.base
+    (fnname          nord-blue-bright)  ; @function -> blue.bright
+    (fnname-call     nord-blue-bright)
+    (name            nord-blue-bright)
+    (type            nord-yellow)       ; Type -> yellow.base
+    (variable        fg-alt)            ; @variable -> white.base
+    (variable-use    fg-alt)
+    (identifier      fg-alt)
+    (property        nord-blue)         ; @property -> blue.base
+    (property-use    nord-blue)
+    (string          nord-green)        ; String -> green.base
     (docstring       nord-green)
-    (comment         fg-dim)            ; comments -> lightened base5
-    (preprocessor    nord-blue)
-    (operator        nord-blue)         ; operators -> blue
+    (comment         nord-comment)      ; Comment -> comment
+    (preprocessor    nord-pink-bright)  ; PreProc -> pink.bright
+    (operator        nord-fg2)          ; Operator -> fg2
     (punctuation     nord-base7)
     (rx-construct    nord-magenta)
     (rx-backslash    nord-cyan)
@@ -190,7 +201,7 @@
     (fg-heading-6              nord-orange)
     (fg-heading-7              nord-red)
     (fg-heading-8              nord-dark-cyan))
-  "Semantic slot mappings for Nord (doom-themes alignment).")
+  "Semantic slot mappings for Nord (nordfox syntax, doom-nord surfaces).")
 
 (defconst nord-palette
   (modus-themes-generate-palette
@@ -205,12 +216,12 @@
   :type '(repeat (list symbol (choice symbol string)))
   :group 'omarchy-themes)
 
-;; doom-nord does not italicize; we italicize comments for parity with
-;; the rest of the omarchy pack.  Variables stay plain base7.
+;; nordfox does not italicize; we italicize comments for parity with
+;; the rest of the omarchy pack.  Variables stay plain white.base.
 (defvar nord-custom-faces
-  '(`(font-lock-variable-name-face ((,c :foreground ,nord-base7 :slant normal)))
-    `(font-lock-variable-use-face  ((,c :foreground ,nord-base7 :slant normal)))
-    `(help-argument-name           ((,c :foreground ,nord-base7 :slant normal))))
+  '(`(font-lock-variable-name-face ((,c :foreground ,fg-alt :slant normal)))
+    `(font-lock-variable-use-face  ((,c :foreground ,fg-alt :slant normal)))
+    `(help-argument-name           ((,c :foreground ,fg-alt :slant normal))))
   "Additional face specs layered on top of the Modus-generated faces.")
 
 (defvar nord-custom-variables nil

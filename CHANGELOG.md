@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Syntax colours now match the Omarchy 4 Neovim schemes.** Every theme was
+  audited against the highlight groups Neovim actually resolves for the stock
+  `neovim.lua` (or, for the seven themes that ship only a `colors.toml`, the
+  `aether` colorscheme Omarchy generates from it). Keywords, functions, types,
+  constants, properties, builtins, preprocessor, operators and diagnostics
+  were re-mapped where they diverged; the biggest corrections are `retro-82`,
+  `ristretto`, `ethereal`, `last-horizon`, `lupine`, `miasma`, `solitude`,
+  `flexoki-light`, `nord`, `tokyo-night`, `hackerman`, `lumon` and
+  `vantablack`. Theme commentaries now name the scheme they mirror.
+- **Numbers are coloured.** Modus leaves `font-lock-number-face` as plain text;
+  all themes now map the `number` slot to the colour Neovim uses.
+- **Diff-added text no longer shares a colour with strings.** Eleven themes
+  used the same green for `fg-added` and `string`, which made difftastic and
+  similar tools paint unchanged strings as additions. `fg-added` got its own
+  tint (modus keeps them distinct upstream for the same reason).
+
 ## [0.2.0] — 2026-08-16
 
 Support for **Omarchy 4 (Quattro)**.
