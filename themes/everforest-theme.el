@@ -93,7 +93,7 @@
     (bg-added-faint      "#3a463d")
     (bg-added-refine     "#5a6e5e")
     (bg-added-intense    "#708869")
-    (fg-added            "#a7c080")
+    (fg-added            "#b6cb96")
     (fg-added-intense    "#c5dba2")
 
     (bg-removed          "#59464c")

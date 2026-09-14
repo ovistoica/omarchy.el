@@ -111,7 +111,7 @@
     (bg-added-faint      "#182e24")
     (bg-added-refine     "#2b5640")
     (bg-added-intense    "#3c7054")
-    (fg-added            "#a6e3a1")
+    (fg-added            "#b6e8b1")
     (fg-added-intense    "#c3efbf")
 
     (bg-removed          "#472530")
