@@ -24,6 +24,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   used the same green for `fg-added` and `string`, which made difftastic and
   similar tools paint unchanged strings as additions. `fg-added` got its own
   tint (modus keeps them distinct upstream for the same reason).
+- **Font size could collapse to 1 under `emacs --daemon`** ([#1]).
+  `omarchy-apply-font` preserved the current height by reading it from the
+  selected frame, which in a daemon can be the hidden terminal frame or a frame
+  carrying a `default` face customization recorded before any graphical frame
+  existed; both report a height of 1, and that value then stuck to every new
+  frame. The font size is now resolved on a graphical frame only, the change is
+  deferred until one exists, an unusable height falls back to 11pt with a
+  one-time warning, and the check is repeated after each theme load (which
+  re-applies face customizations).
+
+### Added
+
+- **`omarchy-font-height`** — optional fixed `default` face height (in 1/10
+  pt) applied alongside the Omarchy font. Leave it nil (the default) and a
+  font or theme change never alters the size.
+- **`omarchy-fallback-font-height`** — height used when the one in effect is
+  unusable (default 110, i.e. 11pt).
 
 ## [0.2.0] — 2026-08-16
 
@@ -94,6 +111,7 @@ Initial release. Final version targeting the **Omarchy 3** series.
 - `omarchy-install-hooks` to generate the `theme-set` / `font-set` shell hooks.
 - Thirteen bundled Modus-derived themes matching Omarchy 3's stock set.
 
+[#1]: https://github.com/ovistoica/omarchy.el/issues/1
 [Unreleased]: https://github.com/ovistoica/omarchy.el/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/ovistoica/omarchy.el/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/ovistoica/omarchy.el/releases/tag/v0.1.0
