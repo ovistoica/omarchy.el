@@ -1,6 +1,6 @@
 # omarchy.el
 
-Emacs integration for [Omarchy](https://omarchy.org), the opinionated Arch + Hyprland Linux distribution by DHH. Keeps your Emacs theme and default font in lockstep with the rest of the desktop, ships 13 Modus-derived themes faithful to their Neovim counterparts (one per theme Omarchy supports), and wraps the common `omarchy-*` CLI toggles so you don't have to context-switch to a terminal.
+Emacs integration for [Omarchy](https://omarchy.org), the opinionated Arch + Hyprland Linux distribution by DHH. Keeps your Emacs theme and default font in lockstep with the rest of the desktop, ships 24 Modus-derived themes faithful to their Neovim counterparts (one per theme Omarchy supports), and wraps the common `omarchy-*` CLI toggles so you don't have to context-switch to a terminal.
 
 On non-Omarchy systems the package loads cleanly and degrades gracefully — interactive commands no-op with a message, and `omarchy-init` falls back to `omarchy-default-theme`.
 
@@ -27,7 +27,7 @@ Higher-quality MP4: [resources/demo.mp4](resources/demo.mp4) (also auto-plays in
 
 ## What's in the box
 
-The package lives at the repo root; the 13 bundled themes are grouped under `themes/`:
+The package lives at the repo root; the 24 bundled themes are grouped under `themes/`:
 
 ```
 omarchy.el/
@@ -46,7 +46,18 @@ omarchy.el/
     ├── nord-theme.el
     ├── ristretto-theme.el
     ├── matte-black-theme.el
-    └── ethereal-theme.el
+    ├── ethereal-theme.el
+    ├── hackerman-theme.el
+    ├── last-horizon-theme.el
+    ├── lumon-theme.el
+    ├── lupine-theme.el
+    ├── miasma-theme.el
+    ├── retro-82-theme.el
+    ├── solitude-theme.el
+    ├── starship-theme.el
+    ├── vantablack-theme.el
+    ├── white-theme.el
+    └── jade-horse-theme.el
 ```
 
 | File | Purpose |
@@ -66,6 +77,17 @@ omarchy.el/
 | `themes/ristretto-theme.el` | Monokai Pro Ristretto (`gthelding/monokai-pro.nvim`) |
 | `themes/matte-black-theme.el` | Matte Black (`tahayvr/matteblack.nvim`) |
 | `themes/ethereal-theme.el` | Ethereal (`bjarneo/ethereal.nvim`) |
+| `themes/hackerman-theme.el` | Hackerman, derived from Modus Vivendi (Omarchy 4 aether palette) |
+| `themes/last-horizon-theme.el` | Last Horizon, derived from Modus Vivendi (Omarchy 4) |
+| `themes/lumon-theme.el` | Lumon, derived from Modus Vivendi (mirrors `lumon.nvim`) |
+| `themes/lupine-theme.el` | Lupine, derived from Modus Operandi (Omarchy 4 aether palette) |
+| `themes/miasma-theme.el` | Miasma, derived from Modus Vivendi (Omarchy 4) |
+| `themes/retro-82-theme.el` | Retro 82, derived from Modus Vivendi (mirrors `retro-82.nvim`) |
+| `themes/solitude-theme.el` | Solitude, derived from Modus Vivendi (mirrors `ashen.nvim`) |
+| `themes/starship-theme.el` | Starship, derived from Modus Vivendi (Omarchy 4 aether palette) |
+| `themes/vantablack-theme.el` | Vantablack, derived from Modus Vivendi (Omarchy 4 aether palette) |
+| `themes/white-theme.el` | White, derived from Modus Operandi (Omarchy 4 aether palette) |
+| `themes/jade-horse-theme.el` | Jade Horse, derived from Modus Vivendi (Omarchy 4 aether palette) |
 
 All bundled themes use the public `modus-themes-theme` machinery, so you get full coverage of the Modus face catalog (Magit, Org, Eglot, tree-sitter, Corfu, Vertico, etc.) without hand-rolling hundreds of `custom-theme-set-faces` entries. Each one's syntax slot mapping (keyword, function, variable, string, comment, type, …) is taken from the upstream Neovim plugin that Omarchy ships, so code renders near-identically across the two editors.
 
@@ -174,6 +196,8 @@ The themes added in 0.2.0 for Omarchy 4 have no separate upstream plugin — the
 | Rose Pine Dawn | `rose-pine` | `rose-pine/neovim` | keyword pine · function rose · string gold · variable text upright |
 | Flexoki Light | `flexoki-light` | `crmsnbleyd/flexoki-emacs-theme` | keyword magenta · function orange · string cyan · variable blue |
 | Catppuccin Latte | `catppuccin-latte` | `catppuccin/nvim` latte | keyword mauve · function blue · string green · variable flamingo |
+| Lupine | `lupine` | Omarchy 4 `colors.toml` (aether) | keyword lilac · function blue · string violet · variable fg-plain |
+| White | `white` | Omarchy 4 `colors.toml` (aether) | keyword dark gray · function near-black · string gray · variable fg-plain |
 
 ### Dark themes
 
@@ -190,11 +214,13 @@ The themes added in 0.2.0 for Omarchy 4 have no separate upstream plugin — the
 | Matte Black | `matte-black` | `tahayvr/matteblack.nvim` | keyword green · function crimson · string fg-neutral · variable amber |
 | Ethereal | `ethereal` | `bjarneo/ethereal.nvim` | keyword purple · function magenta2 · string green · variable magenta2 |
 | Hackerman | `hackerman` | Omarchy 4 `neovim.lua` | keyword accent · function blue · string green · variable magenta |
+| Jade Horse | `jade-horse` | Omarchy 4 `colors.toml` (aether) | keyword bright magenta · function blue · string jade · variable fg-plain |
 | Last Horizon | `last-horizon` | Omarchy 4 `neovim.lua` | keyword rose · function sky · string teal · variable fg-alt |
 | Lumon | `lumon` | Omarchy 4 `neovim.lua` | keyword accent · function blue · string steel · variable fg-alt |
 | Miasma | `miasma` | Omarchy 4 `neovim.lua` | keyword olive · function gold · string green · variable fg-main |
 | Retro 82 | `retro-82` | Omarchy 4 `neovim.lua` | keyword red · function orange · string mint · variable fg-main |
 | Solitude | `solitude` | Omarchy 4 `neovim.lua` | keyword ember · function pearl · string mist · variable fg-main |
+| Starship | `starship` | Omarchy 4 `colors.toml` (aether) | keyword bright magenta · function blue · string amber · variable fg-plain |
 | Vantablack | `vantablack` | Omarchy 4 `neovim.lua` | keyword yellow · function silver · string green · variable fg-main |
 
 Out of the box the themes follow Modus's own conservative defaults: no italic, no bold weight on syntax faces. That's a deliberate choice — readability first, Modus's research on legibility second. You can enable italics and/or bold globally via standard Modus variables; see [Customizing a theme](#customizing-a-theme) below.
@@ -208,7 +234,7 @@ A few things the themes do handle for you:
 
 Because every bundled theme derives from Modus, the whole `modus-themes` customization surface works out of the box.
 
-All 13 bundled themes register their `<theme>-palette-overrides` defcustoms under the `omarchy-themes` customize group (itself a child of the `modus-themes` group). `M-x customize-group RET omarchy-themes RET` gives you a single screen with every bundled theme's override slot.
+All 24 bundled themes register their `<theme>-palette-overrides` defcustoms under the `omarchy-themes` customize group (itself a child of the `modus-themes` group). `M-x customize-group RET omarchy-themes RET` gives you a single screen with every bundled theme's override slot.
 
 **Colors** — `<theme>-palette-overrides` changes any palette slot without editing the theme file. See [Modus's palette override guide][modus-overrides] for all available semantic slot names (`comment`, `keyword`, `fnname`, `string`, `bg-region`, `fg-heading-1`, etc.).
 
@@ -402,7 +428,7 @@ Two subtleties that matter:
 
 Alpha. Interfaces may change before 0.1 is released. In particular:
 
-- All 13 Omarchy theme names mapped by default are bundled. New additions would need a matching Omarchy theme (e.g. `hackerman`, `lumon`, `retro-82`, `vantablack`, `white`, `miasma` are not yet bundled; the core package still handles them via `omarchy-theme-map` if you wire up a third-party Emacs theme).
+- All 24 Omarchy theme names are mapped and bundled. If Omarchy adds a theme this package has not yet ported, `omarchy-apply-theme` still interns the raw name, so a third-party Emacs theme with the same symbol (or a mapping you add to `omarchy-theme-map`) will load.
 - Battery / power / brightness toggles are planned.
 
 ## Contributing

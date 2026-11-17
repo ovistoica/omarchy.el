@@ -36,6 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`jade-horse` and `starship` themes.** Omarchy's two newest themes ship only
+  a `colors.toml`, so Omarchy renders Neovim through `aether.nvim`; both Emacs
+  themes follow that same slot mapping. They are also wired into the default
+  `omarchy-theme-map`, bringing the bundled set to 24 — one for every theme
+  Omarchy ships.
 - **`omarchy-font-height`** — optional fixed `default` face height (in 1/10
   pt) applied alongside the Omarchy font. Leave it nil (the default) and a
   font or theme change never alters the size.
